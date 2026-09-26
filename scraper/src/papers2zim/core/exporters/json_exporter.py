@@ -148,6 +148,7 @@ def _work_to_schema(
         cover_path=_cover_path_for(work),
         formats=book_formats,
         description=work.description,
+        published=work.published,
     )
 
 

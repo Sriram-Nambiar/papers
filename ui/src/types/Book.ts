@@ -30,6 +30,7 @@ export interface Book extends Omit<BookPreview, 'author'> {
   license: string
   formats: BookFormat[]
   description: string | null
+  published: string | null
 }
 
 export interface Books {

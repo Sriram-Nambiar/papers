@@ -268,3 +268,36 @@ def test_author_details_include_wikipedia_enrichment_fields():
     )
     authors = json.loads(listing_call.kwargs["content"])["authors"]
     assert authors[0]["portraitPath"] == "authors/68.webp"
+
+
+def test_book_detail_exports_published():
+    assembler = MagicMock(name="assembler")
+    creator = Creator(id="1", name="Reviewer")
+    store = WorkStore()
+    store.add(
+        Work(
+            id="10",
+            source="wikisource",
+            title="Old Book",
+            creators=[creator],
+            published="c. 1813-1820",
+        )
+    )
+
+    generate_json_files(
+        zim_name="test",
+        formats=["pdf"],
+        work_store=store,
+        assembler=assembler,
+        display_name="Wikisource",
+        source_slug="wikisource",
+        indexes=_indexes(store),
+    )
+
+    detail_call = next(
+        call
+        for call in assembler.add_item_for.call_args_list
+        if call.kwargs["path"] == "books/10.json"
+    )
+    detail = json.loads(detail_call.kwargs["content"])
+    assert detail["published"] == "c. 1813-1820"

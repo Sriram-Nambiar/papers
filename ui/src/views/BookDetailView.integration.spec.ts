@@ -31,6 +31,7 @@ const mockBookData: Book = {
   subtitle: null,
   license: 'Public domain',
   description: 'A classic novel of manners',
+  published: '1813',
   formats: [
     { format: 'html', path: 'https://example.com/1.html', available: true },
     { format: 'epub', path: 'https://example.com/1.epub', available: true },
@@ -83,6 +84,7 @@ describe('BookDetailView Integration', () => {
       expect(wrapper.text()).toContain('Pride and Prejudice')
       expect(wrapper.text()).toContain('Jane Austen')
       expect(wrapper.text()).toContain('(95 books)')
+      expect(wrapper.text()).toContain('1813')
       expect(wrapper.text()).not.toContain('50000')
     })
 

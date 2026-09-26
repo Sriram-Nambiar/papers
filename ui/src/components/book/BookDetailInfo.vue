@@ -222,6 +222,12 @@ const collectionDisplayName = computed(() => {
               </router-link>
             </v-col>
           </v-row>
+          <v-row class="meta-row" v-if="book.published">
+            <v-col cols="4">
+              <div class="inter-13 text-medium-emphasis">{{ t('book.published') }}</div>
+              <div class="inter-13">{{ book.published }}</div>
+            </v-col>
+          </v-row>
         </div>
       </div>
 
@@ -244,6 +250,12 @@ const collectionDisplayName = computed(() => {
             >
               {{ collectionDisplayName }}
             </router-link>
+          </v-col>
+        </v-row>
+        <v-row class="meta-row" v-if="book.published">
+          <v-col cols="4">
+            <div class="inter-13 text-medium-emphasis">{{ t('book.published') }}</div>
+            <div class="inter-13">{{ book.published }}</div>
           </v-col>
         </v-row>
       </div>
