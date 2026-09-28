@@ -19,12 +19,12 @@ jobs:
         run: |
           mkdir -p output
           docker run --rm -v "$PWD/output:/output" papers papers2zim \
-            --source papers \
+            --source gutenberg \
             --output /output \
-            --zim-file /output/papers-integration.zim \
-            --zim-name papers_integration_test \
-            --zim-title "Papers Test" \
-            --zim-desc "One Project Papers book for integration testing" \
+            --zim-file /output/gutenberg-integration.zim \
+            --zim-name gutenberg_integration_test \
+            --zim-title "Gutenberg Test" \
+            --zim-desc "One Project Gutenberg book for integration testing" \
             --books 11 \
             --formats html \
             --no-index \

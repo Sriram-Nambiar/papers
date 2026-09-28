@@ -120,7 +120,7 @@ jobs:
             --source gutenberg \
             --output /output \
             --zim-file /output/gutenberg-integration.zim \
-            --zim-name papers_integration_test \
+            --zim-name gutenberg_integration_test \
             --zim-title "Gutenberg Test" \
             --zim-desc "One Project Gutenberg book for integration testing" \
             --books 11 \
