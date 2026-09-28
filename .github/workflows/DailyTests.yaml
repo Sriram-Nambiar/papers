@@ -44,7 +44,7 @@ jobs:
       - name: Run zimcheck
         run: |
           docker run --rm -v "$PWD/output:/output" \
-            ghcr.io/openzim/zim-tools:3.8.0 zimcheck /output/papers-integration.zim
+            ghcr.io/openzim/zim-tools:3.8.0 zimcheck /output/gutenberg-integration.zim
           docker run --rm -v "$PWD/output:/output" \
             ghcr.io/openzim/zim-tools:3.8.0 zimcheck /output/opentextbooks-integration.zim
 
