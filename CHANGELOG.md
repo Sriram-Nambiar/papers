@@ -8,7 +8,13 @@ as of 2.0.0.
 
 ## [Unreleased]
 
+### Added
+
 - Add author biographies and portraits from Wikipedia with `--with-author-details` (#31)
+
+### Fixed
+
+- Promote Wikisource `issued` to standard `published` metadata (#10)
 - Wikisource: stop offering the withdrawn `xhtml` format, and fail early when a requested format is not offered by ws-export (#11)
 
 ## [1.0.0] - 2026-09-25
