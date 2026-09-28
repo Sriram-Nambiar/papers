@@ -20,13 +20,21 @@ INDEX_HTML = """<html><body><h1>Index of /opds/en</h1>
 </body></html>"""
 
 
-def _entry(page: str, title: str, *, epub: bool = True, xhtml: bool = True) -> str:
+def _entry(
+    page: str, title: str, *, epub: bool = True, xhtml: bool = True, mobi: bool = False
+) -> str:
     links = ""
     if epub:
         links += (
             '<link rel="http://opds-spec.org/acquisition" '
             'type="application/epub+zip" '
             f'href="{BASE}/?lang=en&amp;format=epub&amp;page={page}"/>'
+        )
+    if mobi:
+        links += (
+            '<link rel="http://opds-spec.org/acquisition" '
+            'type="application/x-mobipocket-ebook" '
+            f'href="{BASE}/?lang=en&amp;format=mobi&amp;page={page}"/>'
         )
     if xhtml:
         links += (
@@ -102,7 +110,7 @@ def test_discover_parses_feed_entries_into_work_refs():
     formats = {name: url for name, _mt, url in first.extra["formats"]}
     assert "epub" in formats
     assert formats["epub"].endswith("format=epub&page=First_Book")
-    assert "xhtml" in formats
+    assert "xhtml" not in formats
     # second book advertises epub only
     assert [name for name, _mt, _url in refs[1].extra["formats"]] == ["epub"]
 
@@ -131,12 +139,65 @@ def test_discover_requires_at_least_one_language():
         list(catalog.discover(CatalogFilters()))
 
 
-def test_discover_filters_out_entries_without_a_requested_format():
+def test_discover_fails_when_a_requested_format_is_not_advertised():
     catalog, _ = _catalog(_feed(_entry("First_Book", "First Book")))
 
-    assert (
-        list(catalog.discover(CatalogFilters(languages=["en"], formats=["pdf"]))) == []
+    with pytest.raises(CriticalError, match="html"):
+        list(catalog.discover(CatalogFilters(languages=["en"], formats=["html"])))
+
+
+def test_discover_fails_when_any_requested_format_is_not_advertised():
+    catalog, _ = _catalog(_feed(_entry("First_Book", "First Book")))
+
+    with pytest.raises(CriticalError, match="pdf"):
+        list(
+            catalog.discover(CatalogFilters(languages=["en"], formats=["epub", "pdf"]))
+        )
+
+
+def test_discover_does_not_fail_when_all_requested_formats_are_advertised():
+    catalog, _ = _catalog(_feed(_entry("First_Book", "First Book")))
+
+    refs = list(catalog.discover(CatalogFilters(languages=["en"], formats=["epub"])))
+
+    assert len(refs) == 1
+    assert refs[0].id.startswith("en_first-book")
+
+
+def test_discover_error_names_the_available_formats():
+    catalog, _ = _catalog(_feed(_entry("First_Book", "First Book")))
+
+    with pytest.raises(CriticalError, match="ws-export offers: epub"):
+        list(catalog.discover(CatalogFilters(languages=["en"], formats=["html"])))
+
+
+def test_discover_skips_entries_missing_the_requested_format():
+    catalog, _ = _catalog(
+        _feed(
+            _entry("First_Book", "First Book"),
+            _entry("Second_Book", "Second Book", epub=False, mobi=True),
+        )
     )
+
+    refs = list(catalog.discover(CatalogFilters(languages=["en"], formats=["epub"])))
+
+    assert len(refs) == 1
+    assert refs[0].id.startswith("en_first-book")
+
+
+def test_discover_ignores_unknown_acquisition_media_types():
+    entry = _entry("First_Book", "First Book", xhtml=False).replace(
+        "</entry>",
+        '<link rel="http://opds-spec.org/acquisition" '
+        'type="application/vnd.oasis.opendocument.text" '
+        f'href="{BASE}/?lang=en&amp;format=odt&amp;page=First_Book"/>'
+        "</entry>",
+    )
+    catalog, _ = _catalog(_feed(entry))
+
+    (ref,) = list(catalog.discover(CatalogFilters(languages=["en"])))
+
+    assert [name for name, _mt, _url in ref.extra["formats"]] == ["epub"]
 
 
 def test_discover_selects_by_catalog_position():
