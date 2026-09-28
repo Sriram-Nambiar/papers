@@ -6,7 +6,6 @@ everything downstream (storage, export, ZIM assembly) only ever sees these types
 """
 
 from dataclasses import dataclass, field
-from datetime import date
 from typing import Any
 
 
@@ -59,6 +58,6 @@ class Work:
     popularity: float | int | None = None
     flames: int | None = None
     description: str | None = None
-    published: date | None = None
+    published: str | None = None
     source_url: str | None = None
     extra: dict[str, Any] = field(default_factory=dict)

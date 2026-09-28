@@ -204,15 +204,19 @@ const collectionDisplayName = computed(() => {
         <!-- Desktop-only meta (inside info-cell) -->
         <div class="meta-desktop">
           <v-row class="meta-row">
-            <v-col cols="4">
+            <v-col cols="3" v-if="book.published">
+              <div class="inter-13 text-medium-emphasis">{{ t('book.published') }}</div>
+              <div class="inter-13">{{ book.published }}</div>
+            </v-col>
+            <v-col cols="3">
               <div class="inter-13 text-medium-emphasis">{{ t('book.languages') }}</div>
               <div class="inter-13">{{ formatLanguages(book.languages) }}</div>
             </v-col>
-            <v-col cols="4">
+            <v-col cols="3">
               <div class="inter-13 text-medium-emphasis">{{ t('book.license') }}</div>
               <div class="inter-13">{{ cleanLicense }}</div>
             </v-col>
-            <v-col cols="4" v-if="book.primaryCollection">
+            <v-col cols="3" v-if="book.primaryCollection">
               <div class="inter-13 text-medium-emphasis">{{ t('book.collection') }}</div>
               <router-link
                 :to="{ path: '/collections', query: { collection: book.primaryCollection } }"
@@ -228,15 +232,19 @@ const collectionDisplayName = computed(() => {
       <!-- Mobile-only meta (full width row) -->
       <div class="meta-cell">
         <v-row class="meta-row">
-          <v-col cols="4">
+          <v-col cols="3" v-if="book.published">
+            <div class="inter-13 text-medium-emphasis">{{ t('book.published') }}</div>
+            <div class="inter-13">{{ book.published }}</div>
+          </v-col>
+          <v-col cols="3">
             <div class="inter-13 text-medium-emphasis">{{ t('book.languages') }}</div>
             <div class="inter-13">{{ formatLanguages(book.languages) }}</div>
           </v-col>
-          <v-col cols="4">
+          <v-col cols="3">
             <div class="inter-13 text-medium-emphasis">{{ t('book.license') }}</div>
             <div class="inter-13">{{ cleanLicense }}</div>
           </v-col>
-          <v-col cols="4" v-if="book.primaryCollection">
+          <v-col cols="3" v-if="book.primaryCollection">
             <div class="inter-13 text-medium-emphasis">{{ t('book.collection') }}</div>
             <router-link
               :to="{ path: '/collections', query: { collection: book.primaryCollection } }"

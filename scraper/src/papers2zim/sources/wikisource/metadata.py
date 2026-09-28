@@ -63,8 +63,8 @@ class WikisourceMetadata(MetadataPort):
                 for name, media_type, url in extra.get("formats", [])
             ],
             source_url=extra.get("source_url"),
+            published=extra.get("issued"),
             extra={
-                "issued": extra.get("issued"),
                 "wikisource_page": extra.get("page"),
             },
         )

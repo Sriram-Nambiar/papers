@@ -73,6 +73,7 @@ class Book(BookPreview):
     author: Author
     formats: list[BookFormat]
     description: str | None = None
+    published: str | None = None
 
 
 # Collection Models

@@ -36,6 +36,11 @@
             <dd>{{ book.primary_collection }}</dd>
             {% endif %}
 
+            {% if book.published %}
+            <dt>Published</dt>
+            <dd>{{ book.published }}</dd>
+            {% endif %}
+
             <dt>License</dt>
             <dd>{{ book.license }}</dd>
 

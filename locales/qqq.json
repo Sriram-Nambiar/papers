@@ -28,6 +28,7 @@
 			"downloadCount": "Label for the download count field",
 			"languages": "Label for the language field or filter",
 			"collection": "Label for a source-defined collection field",
+			"published": "Label for the publication date or year field",
 			"license": "Label for the license field",
 			"licensePd": "Text describing the public domain license status in the USA",
 			"licenseCopyright": "Text describing copyrighted works with a notice to check the book for details",
