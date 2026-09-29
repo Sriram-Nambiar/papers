@@ -5,11 +5,11 @@ import { useRouter } from 'vue-router'
 import type { BookPreview } from '@/types'
 import BooksGrid from '@/components/book/BooksGrid.vue'
 import SectionHeader from '@/components/common/SectionHeader.vue'
-import { normalizeImagePath } from '@/utils/format-utils'
 import FireRating from '@/components/common/FireRating.vue'
 import { formatLabel } from '@/utils/format-utils'
 import { useHasPopularity } from '@/composables/useHasPopularity'
 import { TYPOGRAPHY, THEME_COLORS, LAYOUT } from '@/constants/theme'
+import BookCoverImage from '@/components/common/BookCoverImage.vue'
 
 const props = defineProps<{
   books: BookPreview[]
@@ -70,9 +70,8 @@ function goToAuthor(id: string) {
             </p>
 
             <div class="featured-book__cover-wrapper">
-              <img
-                v-if="mostPopular.coverPath"
-                :src="normalizeImagePath(mostPopular.coverPath)"
+              <book-cover-image
+                :cover-path="mostPopular.coverPath"
                 :alt="t('book.coverAlt', { title: mostPopular.title })"
                 class="featured-book__cover"
               />
@@ -164,13 +163,7 @@ function goToAuthor(id: string) {
 }
 
 .featured-book__cover {
-  display: block;
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
-  max-width: 100%;
-  max-height: 100%;
-  width: auto;
-  height: auto;
-  object-fit: contain;
 }
 
 .featured-book__formats {
