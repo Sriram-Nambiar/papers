@@ -2,8 +2,7 @@ import type { PiniaPluginContext } from 'pinia'
 import { createI18n, type ComposerTranslation } from 'vue-i18n'
 import languageData from '@wikimedia/language-data'
 
-const simplifiedBrowserLanguage =
-  typeof navigator !== 'undefined' ? navigator.language?.split('-')[0] : undefined
+const LOCALE_STORAGE_KEY = 'papers-ui-locale-choice'
 
 export type Language = {
   code: string
@@ -44,8 +43,43 @@ function buildSupportedLanguages(): Language[] {
 
 export const supportedLanguages: Language[] = buildSupportedLanguages()
 
+// Candidate locale codes for a BCP 47 tag, most specific first:
+// e.g. `zh-TW` gives `zh-tw`, `zh-hant`, `zh`
+function candidateCodes(tag: string): string[] {
+  const candidates = [tag.toLowerCase()]
+  try {
+    const locale = new Intl.Locale(tag).maximize()
+    if (locale.script) {
+      candidates.push(`${locale.language}-${locale.script}`.toLowerCase())
+    }
+    candidates.push(locale.language.toLowerCase())
+  } catch {
+    candidates.push(tag.split('-')[0]!.toLowerCase())
+  }
+  return [...new Set(candidates)]
+}
+
+export function matchBrowserLanguage(
+  browserLanguages: readonly string[],
+  languages: Language[]
+): Language | undefined {
+  for (const tag of browserLanguages) {
+    for (const code of candidateCodes(tag)) {
+      const language = languages.find((lang) => lang.code === code)
+      if (language) return language
+    }
+  }
+  return undefined
+}
+
+function getBrowserLanguages(): readonly string[] {
+  if (typeof navigator === 'undefined') return []
+  if (navigator.languages?.length) return navigator.languages
+  return navigator.language ? [navigator.language] : []
+}
+
 const defaultLanguage: Language =
-  supportedLanguages.find((lang) => lang.code === simplifiedBrowserLanguage) ||
+  matchBrowserLanguage(getBrowserLanguages(), supportedLanguages) ||
   supportedLanguages.find((lang) => lang.code === 'en')!
 
 const i18n = createI18n({
@@ -107,7 +141,7 @@ export function setLocaleSource(namespace: string): void {
   sourceLocaleNamespace = namespace
 }
 
-export async function setCurrentLocale(locale: Language): Promise<boolean> {
+export async function setCurrentLocale(locale: Language, persist = true): Promise<boolean> {
   if (!loadedLocales.includes(locale.code)) {
     const localeMessages = await loadLocaleMessages(locale.code)
     if (!localeMessages) {
@@ -120,7 +154,9 @@ export async function setCurrentLocale(locale: Language): Promise<boolean> {
   i18n.global.locale.value = locale.code
   document.documentElement.setAttribute('dir', locale.rtl ? 'rtl' : 'ltr')
   document.documentElement.setAttribute('lang', locale.code)
-  localStorage.setItem('ui-locale', locale.code)
+  if (persist) {
+    localStorage.setItem(LOCALE_STORAGE_KEY, locale.code)
+  }
   return true
 }
 
@@ -130,7 +166,7 @@ export function getCurrentLocale() {
 
 function getInitialLanguage(): Language {
   const storedLocale =
-    typeof localStorage !== 'undefined' ? localStorage.getItem('ui-locale') : null
+    typeof localStorage !== 'undefined' ? localStorage.getItem(LOCALE_STORAGE_KEY) : null
   if (storedLocale) {
     const storedLanguage = supportedLanguages.find((lang) => lang.code === storedLocale)
     if (storedLanguage) return storedLanguage
@@ -148,15 +184,12 @@ async function loadI18n(sourceNamespace: string) {
 
   const initialLanguage = getInitialLanguage()
   if (initialLanguage.code !== 'en') {
-    await setCurrentLocale(initialLanguage)
+    await setCurrentLocale(initialLanguage, false)
   } else {
     i18n.global.locale.value = 'en'
     if (typeof document !== 'undefined') {
       document.documentElement.setAttribute('lang', 'en')
       document.documentElement.setAttribute('dir', 'ltr')
-    }
-    if (typeof localStorage !== 'undefined') {
-      localStorage.setItem('ui-locale', 'en')
     }
   }
 
