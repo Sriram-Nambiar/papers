@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { mdiFire } from '@mdi/js'
+import { useHasPopularity } from '@/composables/useHasPopularity'
 
 const props = withDefaults(
   defineProps<{
@@ -11,11 +12,12 @@ const props = withDefaults(
   }
 )
 
+const hasPopularity = useHasPopularity()
 const flameCount = computed(() => Math.max(0, Math.min(3, Math.floor(props.flames))))
 </script>
 
 <template>
-  <div class="fire-rating" :aria-label="`${flameCount} out of 3 flames`">
+  <div v-if="hasPopularity" class="fire-rating" :aria-label="`${flameCount} out of 3 flames`">
     <svg
       v-for="i in 3"
       :key="i"

@@ -9,12 +9,14 @@
 import { computed, ref, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useIsCollectionPage } from '@/composables/useIsCollectionPage'
+import { useHasPopularity } from '@/composables/useHasPopularity'
 import type { SortOption, SortOrder } from '@/types'
 import { LAYOUT, TYPOGRAPHY } from '@/constants/theme'
 import { mdiDotsGrid, mdiFormatListBulleted } from '@mdi/js'
 
 const { t } = useI18n()
 const isCollectionPage = useIsCollectionPage()
+const hasPopularity = useHasPopularity()
 
 const props = defineProps<{
   sortBy: SortOption
@@ -73,7 +75,7 @@ if (typeof document !== 'undefined') {
     <!-- Controls on the right -->
     <div class="sort-and-limit__controls">
       <!-- Sort dropdown -->
-      <div class="dropdown sort-dropdown">
+      <div v-if="hasPopularity" class="dropdown sort-dropdown">
         <button
           class="dropdown__trigger sort-dropdown__trigger"
           :aria-expanded="showSortDropdown"

@@ -1,9 +1,11 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
+import { createPinia, setActivePinia } from 'pinia'
 import { createI18n } from 'vue-i18n'
 import { createMemoryHistory, createRouter } from 'vue-router'
 
 import SelectedBooksSection from './SelectedBooksSection.vue'
+import { useMainStore } from '@/stores/main'
 import type { BookPreview } from '@/types'
 
 const books: BookPreview[] = [
@@ -44,6 +46,25 @@ const books: BookPreview[] = [
 ]
 
 describe('SelectedBooksSection', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia())
+  })
+
+  function setConfigPopularity(popularity: boolean) {
+    useMainStore().config = {
+      title: 'Test',
+      description: null,
+      source: { slug: 'test', name: 'Test', description: 'Test' },
+      theme: { formatIcons: {}, routeLabels: {}, collectionIconStyle: 'classification' },
+      features: {
+        epubReader: true,
+        pdfReader: true,
+        noscriptFallback: true,
+        hasPopularity: popularity
+      }
+    }
+  }
+
   it('features the work with the highest raw popularity within a flame bin', () => {
     const i18n = createI18n({
       legacy: false,
@@ -68,5 +89,32 @@ describe('SelectedBooksSection', () => {
     })
 
     expect(wrapper.find('.featured-book__title').text()).toBe('Highest raw popularity')
+  })
+
+  it('hides the most popular book and shows no flames without popularity', async () => {
+    setConfigPopularity(false)
+    const i18n = createI18n({
+      legacy: false,
+      locale: 'en',
+      messages: { en: { home: { mostPopular: 'Most popular' } } }
+    })
+    const router = createRouter({
+      history: createMemoryHistory(),
+      routes: []
+    })
+
+    const wrapper = mount(SelectedBooksSection, {
+      props: { books },
+      global: {
+        plugins: [i18n, router],
+        stubs: {
+          BooksGrid: true,
+          SectionHeader: true
+        }
+      }
+    })
+
+    expect(wrapper.find('.selected-books-section__featured').exists()).toBe(false)
+    expect(wrapper.find('.featured-book__label').exists()).toBe(false)
   })
 })

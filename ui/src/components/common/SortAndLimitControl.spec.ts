@@ -3,9 +3,11 @@
  * Tests sort selection and view mode toggle
  */
 
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
+import { createPinia, setActivePinia } from 'pinia'
 import SortAndLimitControl from './SortAndLimitControl.vue'
+import { useMainStore } from '@/stores/main'
 import type { SortOption, SortOrder } from '@/types'
 
 // Mock vue-i18n
@@ -58,6 +60,25 @@ const createWrapper = (props: {
   })
 
 describe('SortAndLimitControl', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia())
+  })
+
+  function setConfigPopularity(popularity: boolean) {
+    useMainStore().config = {
+      title: 'Test',
+      description: null,
+      source: { slug: 'test', name: 'Test', description: 'Test' },
+      theme: { formatIcons: {}, routeLabels: {}, collectionIconStyle: 'classification' },
+      features: {
+        epubReader: true,
+        pdfReader: true,
+        noscriptFallback: true,
+        hasPopularity: popularity
+      }
+    }
+  }
+
   it('displays item count range', () => {
     const wrapper = createWrapper({
       sortBy: 'title',
@@ -185,5 +206,28 @@ describe('SortAndLimitControl', () => {
     const emitted = wrapper.emitted('update:viewMode')
     expect(emitted).toBeDefined()
     expect(emitted![0]).toEqual(['list'])
+  })
+
+  it('hides the sort dropdown when the source has no popularity', () => {
+    setConfigPopularity(false)
+
+    const wrapper = createWrapper({
+      sortBy: 'title',
+      sortOrder: 'asc'
+    })
+
+    expect(wrapper.find('.sort-dropdown').exists()).toBe(false)
+    expect(wrapper.find('.view-mode-toggle').exists()).toBe(true)
+  })
+
+  it('shows the sort dropdown when the source has popularity', () => {
+    setConfigPopularity(true)
+
+    const wrapper = createWrapper({
+      sortBy: 'title',
+      sortOrder: 'asc'
+    })
+
+    expect(wrapper.find('.sort-dropdown').exists()).toBe(true)
   })
 })

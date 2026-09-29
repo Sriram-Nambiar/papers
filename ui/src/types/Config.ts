@@ -14,6 +14,7 @@ export interface FeatureFlags {
   epubReader: boolean
   pdfReader: boolean
   noscriptFallback: boolean
+  hasPopularity?: boolean
 }
 
 export interface Config {

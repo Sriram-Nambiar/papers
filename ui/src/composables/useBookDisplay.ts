@@ -2,6 +2,7 @@ import { ref, computed, watch, nextTick, onMounted, onUnmounted, type Ref } from
 import type { BookPreview, SortOption, SortOrder } from '@/types'
 import { useInfiniteScroll } from './useInfiniteScroll'
 import { useSorting, type SortConfig } from './useSorting'
+import { useHasPopularity } from './useHasPopularity'
 
 const DEFAULT_BATCH_SIZE = 20
 
@@ -21,9 +22,17 @@ const sortOptions: SortConfig<BookPreview>[] = [
 ]
 
 export function useBookDisplay(books: Ref<BookPreview[]>) {
-  const sortBy = ref<SortOption>('popularity')
-  const sortOrder = ref<SortOrder>('desc')
+  const hasPopularity = useHasPopularity()
+  const sortBy = ref<SortOption>(hasPopularity.value ? 'popularity' : 'title')
+  const sortOrder = ref<SortOrder>(hasPopularity.value ? 'desc' : 'asc')
   const viewMode = ref<'grid' | 'list'>('grid')
+
+  watch(hasPopularity, (available) => {
+    if (!available) {
+      sortBy.value = 'title'
+      sortOrder.value = 'asc'
+    }
+  })
 
   const isGridView = computed(() => viewMode.value === 'grid')
 
