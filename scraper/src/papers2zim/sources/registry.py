@@ -51,6 +51,7 @@ class SourceProfile:
     source_description: str
     collection_label: str
     collection_icon_style: str
+    has_popularity: bool
     default_mirror_url: str
     # URL path (relative to the mirror) of the catalog feed
     catalog_feed_path: str
@@ -78,6 +79,7 @@ GUTENBERG_PROFILE = SourceProfile(
     source_description="A library of free ebooks from Project Gutenberg.",
     collection_label="LCC Shelves",
     collection_icon_style="classification",
+    has_popularity=True,
     default_mirror_url="https://gutenberg.mirror.driftle.ss",
     catalog_feed_path="/cache/epub/feeds/pg_catalog.csv.gz",
     catalog=gutenberg_catalog,
@@ -105,6 +107,7 @@ OPEN_TEXTBOOK_LIBRARY_PROFILE = SourceProfile(
     source_description="Free, peer-reviewed, openly licensed textbooks.",
     collection_label="Subjects",
     collection_icon_style="subject",
+    has_popularity=True,
     default_mirror_url="https://open.umn.edu/opentextbooks",
     catalog_feed_path="",
     catalog=OpenTextbookLibraryCatalog,
@@ -131,6 +134,7 @@ WIKISOURCE_PROFILE = SourceProfile(
     source_description="A library of free source texts from Wikisource.",
     collection_label="Collections",
     collection_icon_style="classification",
+    has_popularity=False,
     default_mirror_url="https://ws-export.wmcloud.org",
     catalog_feed_path="",
     catalog=WikisourceCatalog,

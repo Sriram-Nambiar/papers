@@ -177,6 +177,7 @@ def generate_json_files(
     source_description: str | None = None,
     collection_label: str = "Collections",
     collection_icon_style: str = "classification",
+    has_popularity: bool = True,
 ) -> None:
     """Generate all JSON files for Vue.js frontend"""
     logger.info("Generating JSON files for Vue.js UI")
@@ -265,6 +266,7 @@ def generate_json_files(
             epub_reader="epub" in formats,
             pdf_reader="pdf" in formats,
             noscript_fallback=True,
+            has_popularity=has_popularity,
         ),
     )
     assembler.add_item_for(

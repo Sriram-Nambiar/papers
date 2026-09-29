@@ -11,6 +11,7 @@ as of 2.0.0.
 ### Added
 
 - Add author biographies and portraits from Wikipedia with `--with-author-details` (#31)
+- Add support for sources without popularity: the source declares it, `config.json` carries the flag, and the UI hides flames and the most popular book and falls back to alphabetical sorting (#14)
 
 ### Fixed
 

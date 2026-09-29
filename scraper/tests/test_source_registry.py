@@ -82,3 +82,10 @@ def test_wikisource_profile_is_registered_with_its_opds_adapters():
     assert issubclass(profile.catalog, CatalogPort)
     assert profile.metadata_class is WikisourceMetadata
     assert profile.pipeline_class is not None
+    assert profile.has_popularity is False
+
+
+def test_popularity_is_declared_per_source():
+    assert get_source("gutenberg").has_popularity is True
+    assert get_source("opentextbooks").has_popularity is True
+    assert get_source("wikisource").has_popularity is False

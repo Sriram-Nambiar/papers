@@ -280,6 +280,7 @@ def build_zimfile(
             source_description=profile.source_description,
             collection_label=profile.collection_label,
             collection_icon_style=profile.collection_icon_style,
+            has_popularity=profile.has_popularity,
             engine=engine,
             title_search=title_search,
             **profile.pipeline_options(

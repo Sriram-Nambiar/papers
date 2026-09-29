@@ -109,6 +109,7 @@ class Pipeline(ABC):
         source_description: str | None = None,
         collection_label: str = "Collections",
         collection_icon_style: str = "classification",
+        has_popularity: bool = True,
         title_search: bool = False,
     ):
         self.metadata = metadata
@@ -125,6 +126,7 @@ class Pipeline(ABC):
         self.source_description = source_description
         self.collection_label = collection_label
         self.collection_icon_style = collection_icon_style
+        self.has_popularity = has_popularity
         self.title_search = title_search
 
     def setup(self) -> None:
@@ -212,6 +214,7 @@ class Pipeline(ABC):
             source_description=self.source_description,
             collection_label=self.collection_label,
             collection_icon_style=self.collection_icon_style,
+            has_popularity=self.has_popularity,
             indexes=indexes,
         )
 

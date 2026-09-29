@@ -167,6 +167,7 @@ def test_config_includes_source_theme_and_features():
         "epubReader": True,
         "pdfReader": True,
         "noscriptFallback": True,
+        "hasPopularity": True,
     }
 
 
@@ -187,7 +188,26 @@ def test_config_only_advertises_enabled_readers():
         "epubReader": False,
         "pdfReader": False,
         "noscriptFallback": True,
+        "hasPopularity": True,
     }
+
+
+def test_config_reports_a_source_without_popularity():
+    assembler = MagicMock(name="assembler")
+    store = _store()
+
+    generate_json_files(
+        zim_name="test",
+        formats=["epub"],
+        work_store=store,
+        assembler=assembler,
+        display_name="Wikisource",
+        source_slug="wikisource",
+        has_popularity=False,
+        indexes=_indexes(store),
+    )
+
+    assert _config_content(assembler)["features"]["hasPopularity"] is False
 
 
 def test_book_detail_exports_popularity_and_flames():

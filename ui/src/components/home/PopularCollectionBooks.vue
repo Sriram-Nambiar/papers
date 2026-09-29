@@ -2,13 +2,20 @@
 import { computed } from 'vue'
 import type { BookPreview } from '@/types'
 import BooksGrid from '@/components/book/BooksGrid.vue'
+import { useHasPopularity } from '@/composables/useHasPopularity'
 
 const props = defineProps<{
   books: BookPreview[]
 }>()
 
+const hasPopularity = useHasPopularity()
+
 const topBooks = computed(() =>
-  [...props.books].sort((a, b) => b.popularity - a.popularity).slice(0, 12)
+  [...props.books]
+    .sort((a, b) =>
+      hasPopularity.value ? b.popularity - a.popularity : a.title.localeCompare(b.title)
+    )
+    .slice(0, 12)
 )
 </script>
 

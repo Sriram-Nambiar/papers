@@ -8,6 +8,7 @@ import SectionHeader from '@/components/common/SectionHeader.vue'
 import { normalizeImagePath } from '@/utils/format-utils'
 import FireRating from '@/components/common/FireRating.vue'
 import { formatLabel } from '@/utils/format-utils'
+import { useHasPopularity } from '@/composables/useHasPopularity'
 import { TYPOGRAPHY, THEME_COLORS, LAYOUT } from '@/constants/theme'
 
 const props = defineProps<{
@@ -16,17 +17,22 @@ const props = defineProps<{
 
 const { t } = useI18n()
 const router = useRouter()
+const hasPopularity = useHasPopularity()
+
+const byTitle = (a: BookPreview, b: BookPreview) => a.title.localeCompare(b.title)
+const byPopularity = (a: BookPreview, b: BookPreview) => b.popularity - a.popularity
 
 const mostPopular = computed(() => {
-  if (props.books.length === 0) return null
-  return [...props.books].sort((a, b) => b.popularity - a.popularity)[0]
+  if (!hasPopularity.value || props.books.length === 0) return null
+  return [...props.books].sort(byPopularity)[0]
 })
 
 const topBooks = computed(() => {
   const excludedId = mostPopular.value?.id
+  const comparator = hasPopularity.value ? byPopularity : byTitle
   return [...props.books]
     .filter((b) => b.id !== excludedId)
-    .sort((a, b) => b.popularity - a.popularity)
+    .sort(comparator)
     .slice(0, 8)
 })
 
@@ -54,7 +60,7 @@ function goToAuthor(id: string) {
 
       <div class="selected-books-section__grid">
         <div class="books-grid">
-          <books-grid :books="topBooks" :columns="4" variant="compact" centered />
+          <books-grid :books="topBooks" :columns="mostPopular ? 4 : 8" variant="compact" centered />
         </div>
 
         <div v-if="mostPopular" class="selected-books-section__featured">

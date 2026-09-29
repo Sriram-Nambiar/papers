@@ -8,10 +8,12 @@ import PopularCollectionBooks from '@/components/home/PopularCollectionBooks.vue
 import SelectedAuthorsCarousel from '@/components/home/SelectedAuthorsCarousel.vue'
 import SelectedBooksSection from '@/components/home/SelectedBooksSection.vue'
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
+import { useHasPopularity } from '@/composables/useHasPopularity'
 import { LAYOUT } from '@/constants/theme'
 
 const { t } = useI18n()
 const main = useMainStore()
+const hasPopularity = useHasPopularity()
 
 const collections = ref<CollectionPreview[]>([])
 const collectionsLoading = ref(false)
@@ -27,13 +29,21 @@ const booksLoading = ref(false)
 
 const popularCollections = computed(() =>
   [...collections.value]
-    .sort((a, b) => (b.totalPopularity || 0) - (a.totalPopularity || 0))
+    .sort((a, b) =>
+      hasPopularity.value
+        ? (b.totalPopularity || 0) - (a.totalPopularity || 0)
+        : a.name.localeCompare(b.name)
+    )
     .slice(0, 6)
 )
 
 const popularAuthors = computed(() =>
   [...authors.value]
-    .sort((a, b) => (b.totalPopularity || 0) - (a.totalPopularity || 0))
+    .sort((a, b) =>
+      hasPopularity.value
+        ? (b.totalPopularity || 0) - (a.totalPopularity || 0)
+        : a.name.localeCompare(b.name)
+    )
     .slice(0, 10)
 )
 
