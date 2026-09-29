@@ -17,6 +17,7 @@ as of 2.0.0.
 
 - Promote Wikisource `issued` to standard `published` metadata (#10)
 - Wikisource: stop offering the withdrawn `xhtml` format, and fail early when a requested format is not offered by ws-export (#11)
+- Fix UI browser language detection: use all preferred browser languages and stop persisting the auto-detected language (#50)
 
 ## [1.0.0] - 2026-09-25
 
