@@ -107,10 +107,11 @@ describe('BookDetailView Integration', () => {
     it('displays book cover image', async () => {
       const wrapper = await mountView()
 
-      const coverImage = wrapper.find('img.detail-cover')
+      const coverImage = wrapper.findComponent({ name: 'BookCoverImage' })
       expect(coverImage.exists()).toBe(true)
-      expect(coverImage.attributes('src')).toBe('/covers/1.jpg')
-      expect(coverImage.attributes('alt')).toBe('book.coverAlt')
+      expect(coverImage.props('coverPath')).toBe('/covers/1.jpg')
+      expect(coverImage.props('alt')).toBe('book.coverAlt')
+      expect(coverImage.classes()).toContain('detail-cover')
     })
   })
 
