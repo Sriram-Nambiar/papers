@@ -2,7 +2,7 @@
 import type { Book } from '@/types'
 import { ref, computed, nextTick, onBeforeUnmount, onMounted, watch } from 'vue'
 import { useFormatters } from '@/composables/useFormatters'
-import { normalizeImagePath, normalizeZimPath, formatLabel } from '@/utils/format-utils'
+import { normalizeZimPath, formatLabel } from '@/utils/format-utils'
 import { useI18n } from 'vue-i18n'
 import { TYPOGRAPHY } from '@/constants/theme'
 import FireRating from '@/components/common/FireRating.vue'
@@ -10,6 +10,7 @@ import EpubReader from '@/components/reader/EpubReader.vue'
 import PdfReader from '@/components/reader/PdfReader.vue'
 import { useMainStore } from '@/stores/main'
 import { useDisplay } from 'vuetify'
+import BookCoverImage from '@/components/common/BookCoverImage.vue'
 
 const { t } = useI18n()
 const { formatLanguages } = useFormatters()
@@ -120,9 +121,8 @@ const collectionDisplayName = computed(() => {
     <div class="book-detail-grid">
       <div class="cover-cell">
         <div class="cover-wrapper">
-          <img
-            v-if="book.coverPath"
-            :src="normalizeImagePath(book.coverPath)"
+          <book-cover-image
+            :cover-path="book.coverPath"
             :alt="t('book.coverAlt', { title: book.title })"
             class="detail-cover"
           />
@@ -470,7 +470,6 @@ const collectionDisplayName = computed(() => {
 }
 
 .detail-cover {
-  object-fit: contain;
   box-shadow: 0 2px 8px rgb(var(--v-theme-grid));
 }
 
