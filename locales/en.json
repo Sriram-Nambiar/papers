@@ -354,7 +354,13 @@
       "introParagraph1": "Wikisource is a free online library of source texts that anyone can improve.",
       "introParagraph2": "Its volunteers transcribe and proofread books, documents, and other published works.",
       "introParagraph3": "The texts are drawn from public-domain and freely licensed sources.",
-      "introParagraph4": "This library makes those texts available for offline reading."
+      "introParagraph4": "This library makes those texts available for offline reading.",
+      "missionAuthor": "The Wikisource community",
+      "missionHeading": "Our mission",
+      "missionParagraph1": "Wikisource exists to make free source texts available to everyone, in every language, for free and forever.",
+      "missionParagraph2": "A source text is a work published in the public domain, or released under a free licence, that we copy with absolute fidelity to the original. Our texts are proofread and verified, so that scholars, students and translators can rely on what they read.",
+      "missionParagraph3": "Everything we produce is freely licensed and may be reused, redistributed and built upon, offline and online, by anyone.",
+      "missionParagraph4": "The library is built and maintained by volunteers, and anyone may contribute. By keeping these texts open, complete and available offline, we help preserve them for the readers of today and for the generations that follow."
     },
     "metadata_defaults": {
       "title": "Wikisource Library",

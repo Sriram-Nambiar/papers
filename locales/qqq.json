@@ -359,7 +359,13 @@
 			"introParagraph1": "Introduction paragraph 1 for Wikisource",
 			"introParagraph2": "Introduction paragraph 2 for Wikisource",
 			"introParagraph3": "Introduction paragraph 3 for Wikisource",
-			"introParagraph4": "Introduction paragraph 4 for Wikisource"
+			"introParagraph4": "Introduction paragraph 4 for Wikisource",
+			"missionAuthor": "Mission author or organisation name",
+			"missionHeading": "Mission section heading for Wikisource",
+			"missionParagraph1": "Mission paragraph 1 for Wikisource",
+			"missionParagraph2": "Mission paragraph 2 for Wikisource",
+			"missionParagraph3": "Mission paragraph 3 for Wikisource",
+			"missionParagraph4": "Mission paragraph 4 for Wikisource"
 		},
 		"metadata_defaults": {
 			"title": "Default ZIM title used in metadata when no specific title is set",

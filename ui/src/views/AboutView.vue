@@ -1,8 +1,24 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { TYPOGRAPHY } from '@/constants/theme'
 
-const { t } = useI18n()
+const { t, te } = useI18n()
+
+function paragraphKeys(prefix: string): string[] {
+  const keys: string[] = []
+  for (let index = 1; ; index += 1) {
+    const key = `${prefix}Paragraph${index}`
+    if (!te(key)) {
+      break
+    }
+    keys.push(key)
+  }
+  return keys
+}
+
+const introParagraphs = computed(() => paragraphKeys('about.intro'))
+const missionParagraphs = computed(() => paragraphKeys('about.mission'))
 </script>
 
 <template>
@@ -10,31 +26,16 @@ const { t } = useI18n()
     <article class="content-card">
       <h1 class="section-title">{{ t('about.introHeading') }}</h1>
 
-      <p>{{ t('about.introParagraph1') }}</p>
-      <p>{{ t('about.introParagraph2') }}</p>
-      <p>{{ t('about.introParagraph3') }}</p>
-      <p>{{ t('about.introParagraph4') }}</p>
+      <p v-for="key in introParagraphs" :key="key">{{ t(key) }}</p>
 
-      <h2 class="section-title mission-title">{{ t('about.missionHeading') }}</h2>
-      <p class="mission-by">{{ t('about.missionAuthor') }}</p>
+      <template v-if="te('about.missionHeading')">
+        <h2 class="section-title mission-title">{{ t('about.missionHeading') }}</h2>
+        <p v-if="te('about.missionAuthor')" class="mission-by">
+          {{ t('about.missionAuthor') }}
+        </p>
 
-      <p>{{ t('about.missionParagraph1') }}</p>
-      <p>{{ t('about.missionParagraph2') }}</p>
-      <p>{{ t('about.missionParagraph3') }}</p>
-      <p>{{ t('about.missionParagraph4') }}</p>
-      <p>{{ t('about.missionParagraph5') }}</p>
-      <p>{{ t('about.missionParagraph6') }}</p>
-      <p>{{ t('about.missionParagraph7') }}</p>
-      <p>{{ t('about.missionParagraph8') }}</p>
-      <p>{{ t('about.missionParagraph9') }}</p>
-      <p>{{ t('about.missionParagraph10') }}</p>
-      <p>{{ t('about.missionParagraph11') }}</p>
-      <p>{{ t('about.missionParagraph12') }}</p>
-      <p>{{ t('about.missionParagraph13') }}</p>
-      <p>{{ t('about.missionParagraph14') }}</p>
-      <p>{{ t('about.missionParagraph15') }}</p>
-      <p>{{ t('about.missionParagraph16') }}</p>
-      <p>{{ t('about.missionParagraph17') }}</p>
+        <p v-for="key in missionParagraphs" :key="key">{{ t(key) }}</p>
+      </template>
 
       <footer class="attribution">
         <p>{{ t('about.attribution') }}</p>
