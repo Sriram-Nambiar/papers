@@ -179,3 +179,37 @@ def test_export_book_still_uses_icon_linked_html_cover():
     assembler.add_alias.assert_called_once_with(
         path="covers/11_cover_image.webp", title="", target="11_icon.webp"
     )
+
+
+def test_export_book_prefers_bundled_cover_over_mismatched_icon_link():
+    """Regression test for #49: PG sometimes tags a decorative illustration as
+    the `<link rel="icon">` cover (e.g. a thin title-page divider) while also
+    bundling the real cover under the standard cover.*/{id}-cover.* naming.
+    The bundled asset must win, even though the icon-linked file is processed
+    first (as in the actual zip order for the reported book)."""
+    html = (
+        b'<html><head><link rel="icon" href="images/illu_title.png"/></head>'
+        b"<body><p>Book content</p></body></html>"
+    )
+    work = _work()
+    assembler = MagicMock()
+    engine = MagicMock()
+    with patch("papers2zim.sources.gutenberg.exporter.download_book_cover") as download:
+        export_book(
+            work=work,
+            book_files={
+                "11.html": html,
+                "11_illu_title.png": _image_bytes("PNG"),
+                "11_cover.jpg": _image_bytes("JPEG"),
+            },
+            formats=["html"],
+            mirror_url="https://example.com",
+            assembler=assembler,
+            engine=engine,
+            _zim_name="test",
+            _title_search=False,
+        )
+    download.assert_not_called()
+    assembler.add_alias.assert_called_once_with(
+        path="covers/11_cover_image.webp", title="", target="11_cover.webp"
+    )
