@@ -12,12 +12,14 @@ as of 2.0.0.
 
 - Add author biographies and portraits from Wikipedia with `--with-author-details` (#31)
 - Add support for sources without popularity: the source declares it, `config.json` carries the flag, and the UI hides flames and the most popular book and falls back to alphabetical sorting (#14)
+- Wikisource: add the library mission to the about page (#18)
 - Use book cover component with fallback images everywhere (#22)
 
 ### Fixed
 
 - Promote Wikisource `issued` to standard `published` metadata (#10)
 - Wikisource: stop offering the withdrawn `xhtml` format, and fail early when a requested format is not offered by ws-export (#11)
+- About page: render the introduction and mission paragraphs a source declares, instead of a fixed number, so a source with no mission no longer prints raw translation keys (#18, #19)
 - Fix UI browser language detection: use all preferred browser languages and stop persisting the auto-detected language (#50)
 
 ## [1.0.0] - 2026-09-25

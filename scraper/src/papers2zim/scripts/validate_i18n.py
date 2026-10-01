@@ -243,7 +243,15 @@ def get_ignored_keys(en_data: dict[str, Any]) -> set[str]:
         "metadata_defaults.title",
     }
 
-    ignored = base_ignored | template_keys
+    about = en_data.get("about")
+    about_keys = about if isinstance(about, dict) else {}
+    dynamic_paragraph_keys = {
+        f"about.{key}"
+        for key in about_keys
+        if re.fullmatch(r"(?:intro|mission)Paragraph\d+", key)
+    }
+
+    ignored = base_ignored | template_keys | dynamic_paragraph_keys
     ignored.update(f"collections.{collection_id}" for collection_id in collection_ids)
 
     return ignored
