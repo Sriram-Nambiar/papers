@@ -15,6 +15,7 @@ export interface FeatureFlags {
   pdfReader: boolean
   noscriptFallback: boolean
   hasPopularity?: boolean
+  hasMultipleCollections?: boolean
 }
 
 export interface Config {

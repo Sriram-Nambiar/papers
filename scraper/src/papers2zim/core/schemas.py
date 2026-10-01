@@ -136,6 +136,7 @@ class FeatureFlags(CamelModel):
     pdf_reader: bool
     noscript_fallback: bool
     has_popularity: bool = True
+    has_multiple_collections: bool = True
 
 
 class Config(CamelModel):

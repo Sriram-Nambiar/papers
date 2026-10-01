@@ -14,6 +14,7 @@ as of 2.0.0.
 - Add support for sources without popularity: the source declares it, `config.json` carries the flag, and the UI hides flames and the most popular book and falls back to alphabetical sorting (#14)
 - Wikisource: add the library mission to the about page (#18)
 - Use book cover component with fallback images everywhere (#22)
+- Hide the "Collections" navigation item when the ZIM only has a single collection (#3)
 
 ### Fixed
 
