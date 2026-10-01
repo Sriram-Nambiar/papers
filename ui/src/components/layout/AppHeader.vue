@@ -3,6 +3,7 @@ import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import { useMainStore } from '@/stores/main'
+import { useHasMultipleCollections } from '@/composables/useHasMultipleCollections'
 import { LAYOUT, TYPOGRAPHY } from '@/constants/theme'
 import { useDisplay } from 'vuetify'
 
@@ -10,16 +11,24 @@ const { t } = useI18n()
 const route = useRoute()
 const main = useMainStore()
 const { mobile } = useDisplay()
+const hasMultipleCollections = useHasMultipleCollections()
 
 const drawer = ref(false)
 
-const navItems = computed(() => [
-  { title: main.config?.theme.routeLabels.home || t('nav.home'), to: '/' },
-  { title: main.config?.theme.routeLabels.works || t('nav.books'), to: '/books' },
-  { title: main.config?.theme.routeLabels.authors || t('nav.authors'), to: '/authors' },
-  { title: main.config?.theme.routeLabels.collections || t('nav.collections'), to: '/collections' },
-  { title: t('nav.about'), to: '/about' }
-])
+const navItems = computed(() =>
+  [
+    { title: main.config?.theme.routeLabels.home || t('nav.home'), to: '/' },
+    { title: main.config?.theme.routeLabels.works || t('nav.books'), to: '/books' },
+    { title: main.config?.theme.routeLabels.authors || t('nav.authors'), to: '/authors' },
+    hasMultipleCollections.value
+      ? {
+          title: main.config?.theme.routeLabels.collections || t('nav.collections'),
+          to: '/collections'
+        }
+      : null,
+    { title: t('nav.about'), to: '/about' }
+  ].filter((item): item is { title: string; to: string } => item !== null)
+)
 
 function isActive(path: string): boolean {
   if (path === '/') {

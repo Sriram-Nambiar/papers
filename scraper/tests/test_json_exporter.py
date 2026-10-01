@@ -168,6 +168,7 @@ def test_config_includes_source_theme_and_features():
         "pdfReader": True,
         "noscriptFallback": True,
         "hasPopularity": True,
+        "hasMultipleCollections": False,
     }
 
 
@@ -189,6 +190,7 @@ def test_config_only_advertises_enabled_readers():
         "pdfReader": False,
         "noscriptFallback": True,
         "hasPopularity": True,
+        "hasMultipleCollections": False,
     }
 
 
@@ -208,6 +210,42 @@ def test_config_reports_a_source_without_popularity():
     )
 
     assert _config_content(assembler)["features"]["hasPopularity"] is False
+
+
+def test_config_reports_a_single_collection_source():
+    assembler = MagicMock(name="assembler")
+    store = _store()  # all works share the single "PR" collection
+
+    generate_json_files(
+        zim_name="test",
+        formats=["html"],
+        work_store=store,
+        assembler=assembler,
+        display_name="Test Source",
+        indexes=_indexes(store),
+    )
+
+    assert _config_content(assembler)["features"]["hasMultipleCollections"] is False
+
+
+def test_config_reports_a_source_with_multiple_collections():
+    assembler = MagicMock(name="assembler")
+    dickens = Creator(id="37", name="Charles Dickens")
+    austen = Creator(id="68", name="Jane Austen")
+    store = WorkStore()
+    store.add(_work("1", "Bleak House", dickens, "PR"))
+    store.add(_work("2", "Emma", austen, "PZ"))
+
+    generate_json_files(
+        zim_name="test",
+        formats=["html"],
+        work_store=store,
+        assembler=assembler,
+        display_name="Test Source",
+        indexes=_indexes(store),
+    )
+
+    assert _config_content(assembler)["features"]["hasMultipleCollections"] is True
 
 
 def test_book_detail_exports_popularity_and_flames():

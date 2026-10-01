@@ -267,6 +267,7 @@ def generate_json_files(
             pdf_reader="pdf" in formats,
             noscript_fallback=True,
             has_popularity=has_popularity,
+            has_multiple_collections=len(collection_ids) > 1,
         ),
     )
     assembler.add_item_for(
