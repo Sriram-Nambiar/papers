@@ -9,16 +9,33 @@ Supplies the source-specific hooks of `core.pipeline.Pipeline`:
   docstring for why the port is not used there yet).
 """
 
+from dataclasses import replace as dataclass_replace
+
 from papers2zim.constants import logger
 from papers2zim.core.download_engine import DownloadEngine
 from papers2zim.core.exporters.html_reader_controls import (
     export_html_reader_control_assets,
 )
+from papers2zim.core.models import CollectionRef
 from papers2zim.core.pipeline import Pipeline
 from papers2zim.core.ports import WorkRef
 from papers2zim.sources.gutenberg.author_enricher import enrich_authors
+from papers2zim.sources.gutenberg.catalog import (
+    LCC_SHELF_KIND,
+    collapse_literature_shelf,
+)
 from papers2zim.sources.gutenberg.downloader import download_book
 from papers2zim.sources.gutenberg.exporter import export_book
+
+
+def _simplify_literature_shelf(collection: CollectionRef) -> CollectionRef:
+    """Collapse a literature sub-shelf collection down to the general "P" one"""
+    if collection.kind != LCC_SHELF_KIND:
+        return collection
+    shelf = collapse_literature_shelf(collection.id)
+    if shelf == collection.id:
+        return collection
+    return dataclass_replace(collection, id=shelf, name=shelf)
 
 
 class GutenbergPipeline(Pipeline):
@@ -30,12 +47,17 @@ class GutenbergPipeline(Pipeline):
         engine: DownloadEngine,
         mirror_url: str,
         with_author_details: bool = False,
+        languages: list[str] | None = None,
         **kwargs,
     ):
         super().__init__(**kwargs)
         self.engine = engine
         self.mirror_url = mirror_url
         self.with_author_details = with_author_details
+        # Splitting the "P" (language and literature) shelf by language/
+        # nationality sub-class (English, French, ...) isn't useful when the
+        # whole ZIM is already restricted to a single language.
+        self.single_language = len(languages or []) == 1
 
     def setup(self) -> None:
         # Export shared reader-control assets first to fail fast if any are missing.
@@ -59,6 +81,11 @@ class GutenbergPipeline(Pipeline):
         if not works:
             return
         work = works[0]
+        if self.single_language:
+            work.collections = [
+                _simplify_literature_shelf(collection)
+                for collection in work.collections
+            ]
         self.store.add(work)
 
         book_content = download_book(

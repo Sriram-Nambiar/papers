@@ -182,6 +182,7 @@
 		"collections": {
 			"A": "Library of Congress Classification Shelf A - General works",
 			"B": "Library of Congress Classification Shelf B - Philosophy, psychology, religion",
+			"CDEF": "Library of Congress Classification Shelves C, D, E and F merged - History (auxiliary sciences of history, world history, history of the Americas)",
 			"C": "Library of Congress Classification Shelf C - Auxiliary sciences of history",
 			"D": "Library of Congress Classification Shelf D - World history and history of Europe, Asia, Africa, Australia, New Zealand, etc.",
 			"E": "Library of Congress Classification Shelf E - History of the Americas",
