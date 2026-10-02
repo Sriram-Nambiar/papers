@@ -284,7 +284,7 @@ def build_zimfile(
             engine=engine,
             title_search=title_search,
             **profile.pipeline_options(
-                mirror_url, config.cache_dir, config.source_options
+                mirror_url, config.cache_dir, config.source_options, languages
             ),
         )
         pipeline.run(refs)

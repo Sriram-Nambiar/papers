@@ -33,6 +33,15 @@ class CatalogEntry:
     lcc_shelf: str
 
 
+# LCC classes C, D, E and F are the "History" super-class (auxiliary
+# sciences of history, world history, history of the Americas); LoC itself
+# only splits them for finer-grained cataloguing. Showing them as separate
+# shelves is confusing since we don't display the shelf letter itself, so
+# they are merged into a single "CDEF" ("History") shelf.
+HISTORY_SHELVES_MERGED_INTO = "CDEF"
+MERGED_HISTORY_SHELVES = {"C", "D", "E", "F"}
+
+
 def transform_locc_code(locc: str) -> str:
     """
     Transform LoCC code to shelf identifier.
@@ -42,6 +51,8 @@ def transform_locc_code(locc: str) -> str:
     - Exception: if first letter is "P" and length > 2 and both characters are
       alphanum, use first two characters
     - Identifier is always uppercase
+    - Exception: "C", "D", "E" and "F" are merged into "CDEF" (all part of
+      the "History" LCC super-class)
 
     Examples:
         "H" -> "H"
@@ -51,6 +62,7 @@ def transform_locc_code(locc: str) -> str:
         "QA" -> "Q"
         "P12" -> "P"
         "b123" -> "B"
+        "E12" -> "CDEF"
     """
 
     locc = locc.upper()
@@ -71,7 +83,22 @@ def transform_locc_code(locc: str) -> str:
         return locc[:2]
 
     # Otherwise, use only first character
-    return locc[0]
+    code = locc[0]
+    if code in MERGED_HISTORY_SHELVES:
+        return HISTORY_SHELVES_MERGED_INTO
+    return code
+
+
+def collapse_literature_shelf(shelf: str) -> str:
+    """Collapse a literature sub-shelf (e.g. "PR", "PS") down to the general
+    "P" shelf.
+
+    Used when a ZIM only contains books in a single language: splitting
+    literature by per-language/nationality LCC sub-classes (English, French,
+    German, etc.) isn't useful when every book is already in the same
+    language.
+    """
+    return "P" if len(shelf) > 1 and shelf[0] == "P" else shelf
 
 
 def get_csv_fpath() -> Path:

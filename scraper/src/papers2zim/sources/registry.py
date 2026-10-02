@@ -59,7 +59,9 @@ class SourceProfile:
     cli_options: Mapping[str, str]
     parse_cli_options: Callable[[dict[str, Any]], dict[str, Any]]
     handle_cli_action: Callable[[Any, dict[str, Any]], bool]
-    pipeline_options: Callable[[str, Path | None, dict[str, Any]], dict[str, Any]]
+    pipeline_options: Callable[
+        [str, Path | None, dict[str, Any], list[str]], dict[str, Any]
+    ]
     metadata_options: Callable[[Path | None], dict[str, Any]]
     # Constructor signatures are source-specific (sources take their own
     # extra kwargs on top of the base ones), hence Callable[..., ...]
@@ -86,9 +88,10 @@ GUTENBERG_PROFILE = SourceProfile(
     cli_options=gutenberg_cli.CLI_OPTIONS,
     parse_cli_options=gutenberg_cli.parse_options,
     handle_cli_action=gutenberg_cli.handle_cli_action,
-    pipeline_options=lambda mirror_url, _cache_dir, source_options: {
+    pipeline_options=lambda mirror_url, _cache_dir, source_options, languages: {
         "mirror_url": mirror_url,
         "with_author_details": bool(source_options.get("with_author_details")),
+        "languages": languages,
     },
     metadata_options=lambda _cache_dir: {},
     metadata_class=GutenbergRdfMetadata,
@@ -114,7 +117,7 @@ OPEN_TEXTBOOK_LIBRARY_PROFILE = SourceProfile(
     cli_options=opentextbooks_cli.CLI_OPTIONS,
     parse_cli_options=opentextbooks_cli.parse_options,
     handle_cli_action=opentextbooks_cli.handle_cli_action,
-    pipeline_options=lambda _mirror_url, cache_dir, _source_options: {
+    pipeline_options=lambda _mirror_url, cache_dir, _source_options, _languages: {
         "cache_dir": cache_dir
     },
     metadata_options=lambda cache_dir: {"cache_dir": cache_dir},
@@ -141,7 +144,7 @@ WIKISOURCE_PROFILE = SourceProfile(
     cli_options=wikisource_cli.CLI_OPTIONS,
     parse_cli_options=wikisource_cli.parse_options,
     handle_cli_action=wikisource_cli.handle_cli_action,
-    pipeline_options=lambda _mirror_url, _cache_dir, _source_options: {},
+    pipeline_options=lambda _mirror_url, _cache_dir, _source_options, _languages: {},
     metadata_options=lambda _cache_dir: {},
     metadata_class=WikisourceMetadata,
     pipeline_class=WikisourcePipeline,

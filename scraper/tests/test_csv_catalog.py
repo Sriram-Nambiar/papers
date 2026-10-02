@@ -2,6 +2,7 @@ import gzip
 
 from papers2zim.sources.gutenberg.catalog import (
     CatalogEntry,
+    collapse_literature_shelf,
     filter_books,
     load_catalog,
     transform_locc_code,
@@ -63,3 +64,19 @@ def test_transform_locc_code():
     assert transform_locc_code("QA") == "Q"
     assert transform_locc_code("") == ""
     assert transform_locc_code("b123") == "B"
+
+
+def test_transform_locc_code_merges_history_shelves_into_cdef():
+    assert transform_locc_code("C") == "CDEF"
+    assert transform_locc_code("D") == "CDEF"
+    assert transform_locc_code("E") == "CDEF"
+    assert transform_locc_code("F") == "CDEF"
+    assert transform_locc_code("e12") == "CDEF"
+
+
+def test_collapse_literature_shelf():
+    assert collapse_literature_shelf("PR") == "P"
+    assert collapse_literature_shelf("PS") == "P"
+    assert collapse_literature_shelf("P") == "P"
+    assert collapse_literature_shelf("Q") == "Q"
+    assert collapse_literature_shelf("") == ""

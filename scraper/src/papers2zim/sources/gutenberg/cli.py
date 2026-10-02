@@ -7,10 +7,9 @@ from papers2zim.core.utils import critical_error
 SUPPORTED_LCC_SHELVES = {
     "A",
     "B",
-    "C",
-    "D",
-    "E",
-    "F",
+    # "C", "D", "E" and "F" are merged into "CDEF" (the "History" shelf),
+    # see transform_locc_code() in catalog.py
+    "CDEF",
     "G",
     "H",
     "J",
