@@ -42,7 +42,9 @@ async function loadVuetify() {
     grid: THEME_COLORS.GRID,
     cardBgd: THEME_COLORS.CARD_BGD,
     cardBgdHover: THEME_COLORS.CARD_BGD_HOVER,
-    cardBorderHover: THEME_COLORS.CARD_BORDER_HOVER
+    cardBorderHover: THEME_COLORS.CARD_BORDER_HOVER,
+    barBorder: THEME_COLORS.BAR_BORDER,
+    shelfBgd: THEME_COLORS.SHELF_BGD
   }
 
   const lightColors = {
@@ -66,7 +68,9 @@ async function loadVuetify() {
     authorAvatarBgd: THEME_COLORS.AUTHOR_AVATAR_BGD_DARK,
     cardBgd: THEME_COLORS.CARD_BGD_DARK,
     cardBgdHover: THEME_COLORS.CARD_BGD_HOVER_DARK,
-    cardBorderHover: THEME_COLORS.CARD_BORDER_HOVER_DARK
+    cardBorderHover: THEME_COLORS.CARD_BORDER_HOVER_DARK,
+    barBorder: THEME_COLORS.BAR_BORDER_DARK,
+    shelfBgd: THEME_COLORS.SHELF_BGD_DARK
   }
 
   const lightTheme: ThemeDefinition = {
