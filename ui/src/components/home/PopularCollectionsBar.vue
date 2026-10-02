@@ -5,7 +5,7 @@ import SubjectCollectionIcon from '@/components/common/SubjectCollectionIcon.vue
 import { useMainStore } from '@/stores/main'
 import type { CollectionPreview } from '@/types'
 import { mdiChevronRight } from '@mdi/js'
-import { TYPOGRAPHY } from '@/constants/theme'
+import { LAYOUT, TYPOGRAPHY } from '@/constants/theme'
 
 const { collections, activeId } = defineProps<{
   collections: CollectionPreview[]
@@ -122,16 +122,34 @@ function handleSelect(id: string) {
 }
 
 .popular-collections-bar__card {
-  background-color: rgb(var(--v-theme-bgd1));
+  background-color: rgb(var(--v-theme-cardBgd));
+  border: v-bind(LAYOUT.BAR_BORDER) solid rgb(var(--v-theme-barBorder));
   border-radius: 5px;
-  padding: 0.5rem 2rem;
+  overflow: hidden;
 }
 
 .popular-collections-bar__shelves {
   display: flex;
-  justify-content: center;
   align-items: stretch;
   gap: 1rem;
+  padding: 0.5rem 1rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.popular-collections-bar__shelves::-webkit-scrollbar {
+  display: none;
+}
+
+/* Center the cards when they fit, without making the first ones unreachable
+   by scroll when they overflow (which justify-content: center would do) */
+.popular-collections-bar__collection-btn:first-child {
+  margin-inline-start: auto;
+}
+
+.popular-collections-bar__collection-btn:last-child {
+  margin-inline-end: auto;
 }
 
 .popular-collections-bar__collection-btn {
@@ -140,14 +158,14 @@ function handleSelect(id: string) {
   align-items: center;
   justify-content: space-between;
   gap: 0;
-  background: none;
+  background-color: rgb(var(--v-theme-shelfBgd));
   border: none;
   cursor: pointer;
   color: rgb(var(--v-theme-text));
   position: relative;
-  width: 180px;
+  /* Sized so that 6 cards fit in the max content width */
+  flex: 0 0 160px;
   padding: 1rem 0.5rem;
-  min-height: 120px;
   border-radius: 1rem;
 }
 
@@ -195,18 +213,6 @@ function handleSelect(id: string) {
   text-underline-offset: 3px;
 }
 
-@media (max-width: 1050px) {
-  .popular-collections-bar__collection-btn:nth-child(n + 6) {
-    display: none;
-  }
-}
-
-@media (max-width: 900px) {
-  .popular-collections-bar__collection-btn:nth-child(n + 5) {
-    display: none;
-  }
-}
-
 @media (max-width: 767px) {
   .popular-collections-bar__title {
     font-size: v-bind(TYPOGRAPHY.H1_SIZE_MOBILE);
@@ -216,47 +222,12 @@ function handleSelect(id: string) {
     font-size: v-bind(TYPOGRAPHY.BODY_SIZE_MOBILE);
   }
 
-  .popular-collections-bar__card {
-    overflow: hidden;
-    padding: 0.75rem 0;
-    border-radius: 0;
-    background-color: transparent;
-    width: 100vw;
-    margin-left: calc(50% - 50vw);
-    margin-right: calc(50% - 50vw);
-  }
-
-  .popular-collections-bar__shelves {
-    gap: 1rem;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    padding: 0 1rem;
-    justify-content: flex-start;
-  }
-
-  .popular-collections-bar__shelves::-webkit-scrollbar {
-    display: none;
-  }
-
   .popular-collections-bar__collection-btn {
-    width: 105px;
-    min-width: 105px;
-    flex-shrink: 0;
-    background-color: rgb(var(--v-theme-bgd1));
-    min-height: auto;
+    flex-basis: 120px;
   }
 
   .popular-collections-bar__collection-name {
     font-size: v-bind(TYPOGRAPHY.SMALL_SIZE_MOBILE);
-  }
-
-  .popular-collections-bar__collection-btn--active {
-    background-color: rgb(var(--v-theme-collectionIcon));
-  }
-
-  .popular-collections-bar__collection-btn:nth-child(n + 5) {
-    display: flex;
   }
 }
 </style>

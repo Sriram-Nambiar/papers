@@ -131,6 +131,8 @@ const arrows = [
 
 <style scoped>
 .selected-authors-carousel {
+  border-top: 0.5px solid rgb(var(--v-theme-grid));
+  border-bottom: 0.5px solid rgb(var(--v-theme-grid));
   background-color: rgb(var(--v-theme-bgd2));
   width: 100vw;
   margin-left: calc(50% - 50vw);

@@ -42,29 +42,27 @@ const { t } = useI18n()
 .collection-book-card {
   display: flex;
   flex-direction: column;
-  width: 100%;
-  height: 100%;
-  position: relative;
-  z-index: 0;
+  /* Fill the parent cell (minus margin); cells are flex rows */
+  flex: 1 1 auto;
+  min-width: 0;
   color: inherit;
-  /* Only the right/bottom edges carry a border. Two adjacent cards would
-     otherwise each draw a border on their shared edge — even lined up
-     pixel-perfectly, the two independently anti-aliased edges stack and
-     read as a visibly darker/thicker seam (most obvious at 4-way grid
-     corners, where up to 4 cards' edges pile up). Drawing each seam exactly
-     once avoids that entirely. The grid/row container supplies the
-     top/left edge of the whole layout once, since no card does. */
-  border-right: v-bind(LAYOUT.CARD_BORDER) solid rgb(var(--v-theme-grid));
-  border-bottom: v-bind(LAYOUT.CARD_BORDER) solid rgb(var(--v-theme-grid));
-  padding: 2rem;
-  padding-bottom: 1.2rem;
-  transition: box-shadow 0.2s ease;
+  margin: v-bind(LAYOUT.BOOK_CARD_MARGIN);
+  /* Transparent border keeps the card size constant when it shows on hover */
+  border: v-bind(LAYOUT.BOOK_CARD_HOVER_BORDER) solid transparent;
+  border-radius: v-bind(LAYOUT.BOOK_CARD_RADIUS);
+  background-color: rgb(var(--v-theme-cardBgd));
+  padding: 1.5rem;
+  padding-bottom: 0.7rem;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .collection-book-card:hover,
-.collection-book-card:focus {
+.collection-book-card:focus-visible {
+  background-color: rgb(var(--v-theme-cardBgdHover));
+  border-color: rgb(var(--v-theme-cardBorderHover));
   box-shadow: 0 0 10px 0 rgb(var(--v-theme-grid));
-  z-index: 1;
 }
 
 .collection-book-cover--wrapper {

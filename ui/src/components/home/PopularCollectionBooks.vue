@@ -21,7 +21,7 @@ const topBooks = computed(() =>
 
 <template>
   <div class="popular-collection-books">
-    <books-grid :books="topBooks" :columns="6" centered />
+    <books-grid :books="topBooks" :columns="6" />
   </div>
 </template>
 

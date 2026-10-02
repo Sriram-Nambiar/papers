@@ -113,7 +113,6 @@ function selectCollection(id: string | null) {
           :books="collectionBooks"
           :columns="4"
           variant="wide"
-          :centered="true"
           type="books"
         />
 

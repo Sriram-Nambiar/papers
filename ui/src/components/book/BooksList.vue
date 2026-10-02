@@ -60,14 +60,6 @@ const { sentinelRef } = useIntersectionObserver(() => {
   max-width: 882px;
 }
 
-.list-cell {
-  margin-bottom: -1px;
-}
-
-.list-cell:nth-last-child(2) {
-  margin-bottom: 0;
-}
-
 .sentinel {
   min-height: 40px;
 }

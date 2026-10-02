@@ -6,7 +6,6 @@ import type { BookPreview } from '@/types'
 import BooksGrid from '@/components/book/BooksGrid.vue'
 import SectionHeader from '@/components/common/SectionHeader.vue'
 import FireRating from '@/components/common/FireRating.vue'
-import { formatLabel } from '@/utils/format-utils'
 import { useHasPopularity } from '@/composables/useHasPopularity'
 import { TYPOGRAPHY, THEME_COLORS, LAYOUT } from '@/constants/theme'
 import BookCoverImage from '@/components/common/BookCoverImage.vue'
@@ -60,7 +59,7 @@ function goToAuthor(id: string) {
 
       <div class="selected-books-section__grid">
         <div class="books-grid">
-          <books-grid :books="topBooks" :columns="mostPopular ? 4 : 8" variant="compact" centered />
+          <books-grid :books="topBooks" :columns="mostPopular ? 4 : 8" variant="compact" />
         </div>
 
         <div v-if="mostPopular" class="selected-books-section__featured">
@@ -75,10 +74,6 @@ function goToAuthor(id: string) {
                 :alt="t('book.coverAlt', { title: mostPopular.title })"
                 class="featured-book__cover"
               />
-            </div>
-
-            <div v-if="mostPopular.availableFormats?.length" class="featured-book__formats">
-              {{ mostPopular.availableFormats.map(formatLabel).join(' · ') }}
             </div>
 
             <button class="featured-book__title-button" @click="goToBook(mostPopular.id)">
@@ -118,13 +113,17 @@ function goToAuthor(id: string) {
   display: flex;
 }
 
+/* Fixed flex bases: with `auto`, the split depends on content size, which
+   changes as lazy-loaded covers arrive */
 .books-grid {
-  flex-grow: 1;
-  flex-shrink: 1;
+  flex: 1 1 0;
+  min-width: 0;
 }
 
 .selected-books-section__featured {
-  width: calc(2 * 160px);
+  margin-top: v-bind(LAYOUT.BOOK_CARD_MARGIN);
+  margin-left: v-bind(LAYOUT.BOOK_CARD_MARGIN);
+  flex: 0 0 30%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -132,9 +131,10 @@ function goToAuthor(id: string) {
 }
 
 .selected-books-section__featured-inner {
-  padding: 4rem;
+  padding: 3rem;
   background-color: v-bind(THEME_COLORS.FOCUS_BOOK);
   color: #ffffff;
+  border-radius: 10px;
 }
 
 .featured-book__label {
@@ -153,7 +153,7 @@ function goToAuthor(id: string) {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 0.75rem;
+  margin-bottom: 1.05rem;
   width: 100%;
   aspect-ratio: 2 / 3;
   max-height: 450px;

@@ -23,7 +23,17 @@ export const THEME_COLORS = {
   TEXT: '#000000',
   TEXT_DARK: '#ffffff',
   GRID: '#cccccc',
-  GRID_DARK: '#444444'
+  GRID_DARK: '#444444',
+  CARD_BGD: '#ffffff',
+  CARD_BGD_DARK: '#1e1e1e',
+  CARD_BGD_HOVER: '#e8eced',
+  CARD_BGD_HOVER_DARK: '#2a3034',
+  CARD_BORDER_HOVER: '#9eacb5',
+  CARD_BORDER_HOVER_DARK: '#5a6870',
+  BAR_BORDER: '#e2e6e8',
+  BAR_BORDER_DARK: '#363c40',
+  SHELF_BGD: '#c4eef7',
+  SHELF_BGD_DARK: '#233f48'
 } as const
 
 export const LAYOUT = {
@@ -33,7 +43,10 @@ export const LAYOUT = {
   VIEW_PADDING_HORIZONTAL: '1.6rem',
   VIEW_PADDING: '2rem 1.6rem',
   VIEW_PADDING_MOBILE: '1.5rem 1.6rem',
-  CARD_BORDER: '1.5px'
+  BOOK_CARD_RADIUS: '10px',
+  BOOK_CARD_MARGIN: '0.5rem',
+  BOOK_CARD_HOVER_BORDER: '0.5px',
+  BAR_BORDER: '0.5px'
 } as const
 
 export const AVATAR_SIZES = {

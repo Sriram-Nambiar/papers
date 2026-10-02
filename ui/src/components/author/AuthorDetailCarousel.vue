@@ -6,7 +6,6 @@ import AuthorCard from './AuthorCard.vue'
 import CarouselArrow from '@/components/common/CarouselArrow.vue'
 import { compareAuthorNames } from '@/utils/format-utils'
 import { useDisplay } from 'vuetify'
-import { LAYOUT } from '@/constants/theme.ts'
 
 const { mobile } = useDisplay()
 
@@ -94,9 +93,9 @@ watch(
         <author-card
           :author="currentAuthor"
           variant="comfortable"
-          bordered
+          boxed
+          selected
           :navigate="false"
-          :noRightBorder="true"
         />
       </div>
       <div ref="trackRef" class="carousel-track" @scroll.passive="updateScrollState">
@@ -113,7 +112,8 @@ watch(
               :author="author"
               :variant="mobile ? 'comfortable' : 'compact'"
               :navigate="author.id != currentAuthor.id"
-              bordered
+              :selected="author.id === currentAuthor.id"
+              boxed
             />
           </div>
           <div
@@ -155,8 +155,6 @@ watch(
   position: relative;
   width: 100%;
   align-items: stretch;
-  scrollbar-width: none;
-  padding: 5px 1px; /* extra vertical padding so box-shadow isn't clipped by overflow-x + right border is not clipped by rounding errors*/
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
@@ -179,12 +177,11 @@ watch(
      and snaps straight back to it after any other scroll attempt,
      including the arrow buttons. */
   scroll-snap-align: start;
+  display: flex;
 }
 
 .carousel-cell--current {
   flex: 0 0 40%;
-  margin: 5px 0; /* extra vertical padding so box-shadow isn't clipped by overflow-x */
-  background-color: rgba(var(--v-theme-text), 0.08);
 }
 
 .carousel-cell--others {
@@ -201,19 +198,6 @@ watch(
   }
 }
 
-.carousel-cell:first-child {
-  border-left: v-bind(LAYOUT.CARD_BORDER) solid rgb(var(--v-theme-grid));
-}
-
-.carousel-cell--others {
-  transition: box-shadow 0.25s ease;
-}
-
-.carousel-cell--others:hover,
-.carousel-cell--others:focus {
-  box-shadow: 0 0 10px 0 rgb(var(--v-theme-grid));
-}
-
 @media (max-width: 767px) {
   .author-detail-carousel {
     width: 100vw;
@@ -227,10 +211,6 @@ watch(
 
   .carousel-cell {
     flex: 0 0 75%;
-  }
-
-  .carousel-cell--current {
-    margin: 0;
   }
 }
 </style>

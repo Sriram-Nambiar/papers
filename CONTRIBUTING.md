@@ -136,7 +136,7 @@ docker run -it --rm -v $(pwd)/output:/data ghcr.io/openzim/zim-tools:latest \
   zimdump dump --dir=/data/papers_dev /data/papers_dev.zim
 
 # Move to UI public folder
-mv output/papers_dev/* ui/public/
+find output/papers_dev -mindepth 1 -maxdepth 1 -exec sh -c 'mv "$@" ui/public/' sh {} +
 rm -rf output/papers_dev
 ```
 
