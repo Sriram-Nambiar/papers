@@ -24,6 +24,14 @@ export function formatLabel(format: string): string {
   return format === 'epub' ? 'ePUB' : format.toUpperCase()
 }
 
+/** Format an ISO 8601 date-only string (e.g. "2026-09-23") in the given locale. */
+export function formatScrapeDate(isoDate: string, locale: string): string {
+  const [year, month, day] = isoDate.split('-').map(Number)
+  if (!year || !month || !day) return isoDate
+  const date = new Date(year, month - 1, day)
+  return new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(date)
+}
+
 export function formatLanguages(languages: string[], options?: { uiLocale?: string }): string {
   const locale = options?.uiLocale || 'en'
 

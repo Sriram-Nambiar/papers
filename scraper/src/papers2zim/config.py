@@ -157,6 +157,11 @@ def build_scrape_config(arguments: dict) -> ScrapeConfig:
             only_books_ids.append(bounds[0])
     only_books_ids = list(set(only_books_ids))
 
+    books = [str(book_id) for book_id in only_books_ids] + list(
+        source_options.get("book_ids") or []
+    )
+    collections = source_options.get("collections") or source_options.get("subjects")
+
     return ScrapeConfig(
         source=source.slug,
         mirror_url=mirror_url,
@@ -164,9 +169,9 @@ def build_scrape_config(arguments: dict) -> ScrapeConfig:
         cache_dir=cache_dir,
         concurrency=concurrency,
         formats=formats,
-        books=[str(book_id) for book_id in only_books_ids] or None,
+        books=books or None,
         languages=languages or None,
-        collections=source_options.get("collections"),
+        collections=collections or None,
         source_options=source_options,
         ui_dist=ui_dist,
         debug=debug,
@@ -183,12 +188,7 @@ def build_scrape_config(arguments: dict) -> ScrapeConfig:
         zim_tags=(arguments.get("--zim-tags") or "").strip() or None,
         publisher=publisher,
         overwrite=overwrite,
-        is_selection=bool(
-            only_books_ids
-            or source_options.get("collections")
-            or source_options.get("subjects")
-            or source_options.get("book_ids")
-        ),
+        is_selection=bool(books or collections),
         title_search=title_search,
         with_fulltext_index=with_fulltext_index,
         stats_filename=stats_filename,

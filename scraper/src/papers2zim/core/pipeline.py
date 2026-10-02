@@ -111,6 +111,9 @@ class Pipeline(ABC):
         collection_icon_style: str = "classification",
         has_popularity: bool = True,
         title_search: bool = False,
+        requested_languages: list[str] | None = None,
+        collections: list[str] | None = None,
+        books: list[str] | None = None,
     ):
         self.metadata = metadata
         self.store = store
@@ -128,6 +131,9 @@ class Pipeline(ABC):
         self.collection_icon_style = collection_icon_style
         self.has_popularity = has_popularity
         self.title_search = title_search
+        self.requested_languages = requested_languages
+        self.collections = collections
+        self.books = books
 
     def setup(self) -> None:
         """Hook run once before any work is processed (default: no-op)"""
@@ -216,6 +222,9 @@ class Pipeline(ABC):
             collection_icon_style=self.collection_icon_style,
             has_popularity=self.has_popularity,
             indexes=indexes,
+            requested_languages=self.requested_languages,
+            requested_collections=self.collections,
+            books=self.books,
         )
 
         # Generate No-JS fallback pages

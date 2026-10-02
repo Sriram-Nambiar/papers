@@ -3,6 +3,7 @@ import { computed, ref } from 'vue'
 import type { CollectionPreview } from '@/types'
 import { useI18n } from 'vue-i18n'
 import { TYPOGRAPHY } from '@/constants/theme'
+import { getCollectionLabel } from '@/utils/collection-names'
 
 import { mdiBookshelf, mdiPlus, mdiMinus } from '@mdi/js'
 import ClassificationIcon from '@/components/common/ClassificationIcon.vue'
@@ -31,7 +32,7 @@ function handleSelect(id: string | null) {
 function displayCollectionName(collection: CollectionPreview) {
   return collection.name && collection.name !== collection.id
     ? collection.name
-    : t(`collections.${collection.id}`, collection.id)
+    : getCollectionLabel(collection.id, t)
 }
 
 const activeCollectionName = computed(() => {

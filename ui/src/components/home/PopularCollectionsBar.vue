@@ -124,7 +124,7 @@ function handleSelect(id: string) {
 .popular-collections-bar__card {
   background-color: rgb(var(--v-theme-cardBgd));
   border: v-bind(LAYOUT.BAR_BORDER) solid rgb(var(--v-theme-barBorder));
-  border-radius: 5px;
+  border-radius: 1rem;
   overflow: hidden;
 }
 
@@ -132,7 +132,7 @@ function handleSelect(id: string) {
   display: flex;
   align-items: stretch;
   gap: 1rem;
-  padding: 0.5rem 1rem;
+  padding: 0.8rem 1rem;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
@@ -164,8 +164,8 @@ function handleSelect(id: string) {
   color: rgb(var(--v-theme-text));
   position: relative;
   /* Sized so that 6 cards fit in the max content width */
-  flex: 0 0 160px;
-  padding: 1rem 0.5rem;
+  flex: 0 0 172px;
+  padding: 1rem 0.7rem;
   border-radius: 1rem;
 }
 

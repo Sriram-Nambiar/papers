@@ -147,6 +147,7 @@ On Windows, run these commands in WSL or adapt them to PowerShell.
 ```bash
 cd ui
 npm install
+npm run generate # generate CLDR data
 npm run dev
 ```
 

@@ -30,8 +30,8 @@ const props = defineProps<{
 const COLLECTION_ICONS: Record<string, string> = {
   A: mdiBookOpenPageVariant,
   B: mdiBrain,
-  C: mdiHistory,
-  D: mdiScriptText,
+  C: mdiScriptText,
+  D: mdiHistory,
   E: mdiStarCircle,
   F: mdiStarCircle,
   G: mdiEarth,

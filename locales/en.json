@@ -49,6 +49,28 @@
       "booksIn": "Books in {collection}",
       "allCollections": "All collections"
     },
+    "zimInfo": {
+      "trigger": "Information about this ZIM",
+      "title": "Information about this ZIM",
+      "source": "Source",
+      "collections": {
+        "one": "Collection",
+        "other": "Collections"
+      },
+      "books": {
+        "one": "Book",
+        "other": "Books"
+      },
+      "language": {
+        "one": "Language",
+        "other": "Languages"
+      },
+      "formats": {
+        "one": "Format",
+        "other": "Formats"
+      },
+      "dateScraped": "Date scraped"
+    },
     "reader": {
       "close": "Close reader",
       "closeTableOfContents": "Close table of contents",
@@ -94,6 +116,7 @@
       "navigateTo": "Navigate to",
       "navigateToItem": "Navigate to {item}",
       "close": "Close",
+      "all": "All",
       "next": "Next",
       "previous": "Previous",
       "readMore": "Read more",

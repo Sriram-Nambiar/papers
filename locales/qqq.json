@@ -54,6 +54,16 @@
 			"booksIn": "Heading for books in a collection. Parameters: {collection} - collection name",
 			"allCollections": "All collections link in sidebar"
 		},
+		"zimInfo": {
+			"trigger": "Accessible label for the header button that opens the ZIM information dialog",
+			"title": "Title of the dialog showing the filters used to build this ZIM",
+			"source": "Label for the content source field in the ZIM information dialog",
+			"collections": "Label for the collections field in the ZIM information dialog, pluralized on the number of collections listed",
+			"books": "Label for the books field in the ZIM information dialog, pluralized on the number of books listed",
+			"language": "Label for the languages field in the ZIM information dialog, pluralized on the number of languages listed",
+			"formats": "Label for the formats field in the ZIM information dialog, pluralized on the number of formats listed",
+			"dateScraped": "Label for the scrape date field in the ZIM information dialog"
+		},
 		"reader": {
 			"close": "Accessible label for closing a reader dialog",
 			"closeTableOfContents": "Accessible label for closing the EPUB table of contents",
@@ -99,6 +109,7 @@
 			"navigateTo": "Accessible label prefix for navigation links",
 			"navigateToItem": "Accessible label for navigating to an item. Parameters: {item} - item name",
 			"close": "Close button label",
+			"all": "Generic label meaning no filter is applied on a given dimension",
 			"next": "Next page button",
 			"previous": "Previous page button",
 			"readMore": "Read more button for truncated text",

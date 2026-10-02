@@ -108,6 +108,14 @@ describe('Main Store Integration', () => {
           epubReader: true,
           pdfReader: true,
           noscriptFallback: true
+        },
+        contentInfo: {
+          source: 'Test Source',
+          collections: null,
+          books: null,
+          languages: null,
+          formats: null,
+          dateScraped: '2026-01-01'
         }
       }
 

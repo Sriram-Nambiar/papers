@@ -1,5 +1,5 @@
 import type { PiniaPluginContext } from 'pinia'
-import { createI18n, type ComposerTranslation } from 'vue-i18n'
+import { createI18n, useI18n, type Composer, type ComposerTranslation } from 'vue-i18n'
 import languageData from '@wikimedia/language-data'
 
 const LOCALE_STORAGE_KEY = 'papers-ui-locale-choice'
@@ -194,6 +194,54 @@ async function loadI18n(sourceNamespace: string) {
   }
 
   return i18n
+}
+
+// Plural forms are written as an object keyed by CLDR plural category, e.g.
+// `"books": { "one": "Book", "other": "Books" }`; only `other` is mandatory
+export const PLURAL_CATEGORIES = ['zero', 'one', 'two', 'few', 'many', 'other'] as const
+
+type PluralComposer = Pick<Composer, 't' | 'te' | 'locale'>
+
+function pluralCategory(locale: string, count: number): Intl.LDMLPluralRule {
+  try {
+    return new Intl.PluralRules(locale).select(count)
+  } catch {
+    return 'other'
+  }
+}
+
+// Translate a plural message for `count` items, `null` meaning an unbounded
+// amount (e.g. "all"), which uses the `other` form. `{count}` and `{n}` are
+// available in messages. `zero` is used for 0 when present, even in languages
+// where CLDR has no such category. Missing forms fall back to `other`, and a
+// message missing in the current locale falls back to English as a whole, so
+// forms of two languages are never mixed
+export function translatePlural(
+  i18n: PluralComposer,
+  key: string,
+  count: number | null,
+  named: Record<string, unknown> = {}
+): string {
+  for (const locale of [i18n.locale.value, 'en']) {
+    if (!i18n.te(`${key}.other`, locale)) continue
+    let category: string = 'other'
+    if (count === 0 && i18n.te(`${key}.zero`, locale)) {
+      category = 'zero'
+    } else if (count !== null) {
+      const cldrCategory = pluralCategory(locale, count)
+      if (i18n.te(`${key}.${cldrCategory}`, locale)) category = cldrCategory
+    }
+    return i18n.t(`${key}.${category}`, { count, n: count, ...named }, { locale })
+  }
+  return key
+}
+
+export function usePlural() {
+  const i18n = useI18n()
+  return {
+    tp: (key: string, count: number | null, named?: Record<string, unknown>) =>
+      translatePlural(i18n, key, count, named)
+  }
 }
 
 declare module 'pinia' {

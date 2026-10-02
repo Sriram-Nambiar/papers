@@ -8,6 +8,7 @@ import { describe, it, expect } from 'vitest'
 import {
   formatAuthorLifespan,
   formatLanguages,
+  formatScrapeDate,
   pluralize,
   extractUniqueValues,
   normalizeImagePath,
@@ -50,6 +51,21 @@ describe('formatLanguages', () => {
 
   it('falls back to English when locale has no CLDR data', () => {
     expect(formatLanguages(['en'], { uiLocale: 'zzz' })).toBe('English')
+  })
+})
+
+describe('formatScrapeDate', () => {
+  it('formats an ISO date-only string in the given locale', () => {
+    expect(formatScrapeDate('2026-09-23', 'en')).toBe('Sep 23, 2026')
+  })
+
+  it('does not shift the day across timezones (no UTC parsing)', () => {
+    const formatted = formatScrapeDate('2026-01-01', 'en')
+    expect(formatted).toContain('Jan 1')
+  })
+
+  it('returns the raw input when it cannot be parsed', () => {
+    expect(formatScrapeDate('not-a-date', 'en')).toBe('not-a-date')
   })
 })
 

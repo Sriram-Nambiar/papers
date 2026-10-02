@@ -6,6 +6,7 @@ import { useMainStore } from '@/stores/main'
 import { useHasMultipleCollections } from '@/composables/useHasMultipleCollections'
 import { LAYOUT, TYPOGRAPHY } from '@/constants/theme'
 import { useDisplay } from 'vuetify'
+import ZimInfoDialog from '@/components/layout/ZimInfoDialog.vue'
 
 const { t } = useI18n()
 const route = useRoute()
@@ -14,6 +15,7 @@ const { mobile } = useDisplay()
 const hasMultipleCollections = useHasMultipleCollections()
 
 const drawer = ref(false)
+const infoDialogOpen = ref(false)
 
 const navItems = computed(() =>
   [
@@ -45,27 +47,38 @@ function isActive(path: string): boolean {
         <span>{{ main.config?.source.name || 'Library' }}</span>
       </router-link>
 
-      <v-app-bar-nav-icon
-        @click="drawer = !drawer"
-        :aria-label="t('common.toggleNavigationMenu')"
-        variant="text"
-        density="compact"
-        elevation="0"
-        v-if="mobile"
-      />
+      <div class="app-header__nav-group">
+        <v-app-bar-nav-icon
+          @click="drawer = !drawer"
+          :aria-label="t('common.toggleNavigationMenu')"
+          variant="text"
+          density="compact"
+          elevation="0"
+          v-if="mobile"
+        />
 
-      <nav v-if="!mobile" :aria-label="t('common.mainNavigation')" class="app-header__nav">
-        <router-link
-          v-for="item in navItems"
-          :key="item.to"
-          :to="item.to"
-          :class="['app-header__link', { 'app-header__link--active': isActive(item.to) }]"
-          :aria-label="t('common.navigateToItem', { item: item.title })"
-          :aria-current="isActive(item.to) ? 'page' : undefined"
+        <nav v-if="!mobile" :aria-label="t('common.mainNavigation')" class="app-header__nav">
+          <router-link
+            v-for="item in navItems"
+            :key="item.to"
+            :to="item.to"
+            :class="['app-header__link', { 'app-header__link--active': isActive(item.to) }]"
+            :aria-label="t('common.navigateToItem', { item: item.title })"
+            :aria-current="isActive(item.to) ? 'page' : undefined"
+          >
+            {{ item.title }}
+          </router-link>
+        </nav>
+
+        <button
+          class="app-header__info-trigger"
+          type="button"
+          :aria-label="t('zimInfo.trigger')"
+          @click="infoDialogOpen = true"
         >
-          {{ item.title }}
-        </router-link>
-      </nav>
+          <v-icon icon="mdi-information-outline" size="20" />
+        </button>
+      </div>
     </div>
   </header>
 
@@ -105,6 +118,8 @@ function isActive(path: string): boolean {
       </nav>
     </div>
   </transition>
+
+  <ZimInfoDialog v-model="infoDialogOpen" />
 </template>
 
 <style scoped>
@@ -214,6 +229,12 @@ function isActive(path: string): boolean {
   padding-bottom: 0.9rem;
 }
 
+.app-header__nav-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
 .app-header__brand {
   font-family: v-bind(TYPOGRAPHY.FONT_FAMILY);
   font-size: v-bind(TYPOGRAPHY.H1_SIZE);
@@ -221,6 +242,29 @@ function isActive(path: string): boolean {
   color: rgb(var(--v-theme-author));
   text-decoration: none;
   letter-spacing: -0.02em;
+}
+
+.app-header__info-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  color: rgb(var(--v-theme-text));
+  opacity: 0.65;
+  transition:
+    background-color 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.app-header__info-trigger:hover {
+  opacity: 1;
+  background-color: rgba(var(--v-theme-text), 0.06);
 }
 
 .app-header__nav {

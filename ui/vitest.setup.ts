@@ -15,7 +15,7 @@ globalThis.IntersectionObserver = class IntersectionObserver {
   readonly root = null
   readonly rootMargin = ''
   readonly thresholds = []
-  
+
   constructor() {}
   observe() {}
   unobserve() {}
@@ -24,6 +24,21 @@ globalThis.IntersectionObserver = class IntersectionObserver {
     return []
   }
 }
+
+// jsdom has no visualViewport; Vuetify's VOverlay location strategies read it
+// to position dialogs/menus.
+globalThis.visualViewport ??= {
+  width: window.innerWidth,
+  height: window.innerHeight,
+  offsetLeft: 0,
+  offsetTop: 0,
+  pageLeft: 0,
+  pageTop: 0,
+  scale: 1,
+  addEventListener: () => {},
+  removeEventListener: () => {},
+  dispatchEvent: () => true
+} as unknown as VisualViewport
 
 // Create Vuetify instance for tests
 const vuetify = createVuetify({
@@ -43,6 +58,7 @@ const i18n = createI18n({
         clearAllSelections: 'Clear all selections',
         selectAll: 'Select all',
         clear: 'Clear',
+        close: 'Close',
         all: 'All',
         filter: 'filter',
         selected: 'selected',
@@ -61,6 +77,16 @@ const i18n = createI18n({
       },
       collection: {
         bookCount: '{n} book | {n} books'
+      },
+      zimInfo: {
+        trigger: 'Information about this ZIM',
+        title: 'Information about this ZIM',
+        source: 'Source',
+        collections: { one: 'Collection', other: 'Collections' },
+        books: { one: 'Book', other: 'Books' },
+        language: { one: 'Language', other: 'Languages' },
+        formats: { one: 'Format', other: 'Formats' },
+        dateScraped: 'Date scraped'
       },
       messages: {
         noBooksForAuthor: 'No books available for this author',
