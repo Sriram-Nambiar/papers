@@ -161,6 +161,17 @@ def _add_companion_html(
 
 
 def _detect_html_cover(work: Work, filename: str, output_filename: str):
+    # A dedicated cover asset (cover.* or {id}-cover.*) is PG's unambiguous,
+    # purpose-named cover file. It takes priority over a <link rel="icon">
+    # href: that link is sometimes mistagged by PG and points at an unrelated
+    # illustration instead of the actual cover (see #49), whereas in the
+    # normal case it points at this very same bundled file anyway.
+    is_bundled_cover = work.extra.get("has_cover") and is_cover_asset(work.id, filename)
+    if is_bundled_cover:
+        work.extra["html_cover_path"] = output_filename
+        logger.debug(f"Detected bundled cover for book #{work.id}: {output_filename}")
+        return
+
     if work.extra.get("html_cover_path"):
         return
     cover_href = work.extra.get("_cover_href")
@@ -169,12 +180,7 @@ def _detect_html_cover(work: Work, filename: str, output_filename: str):
         if cover_href
         else None
     )
-    is_bundled_cover = (
-        expected_cover is None
-        and work.extra.get("has_cover")
-        and is_cover_asset(work.id, filename)
-    )
-    if output_filename != expected_cover and not is_bundled_cover:
+    if output_filename != expected_cover:
         return
     work.extra["html_cover_path"] = output_filename
     logger.debug(f"Detected HTML cover for book #{work.id}: {output_filename}")
