@@ -6,7 +6,6 @@ import type { BookPreview } from '@/types'
 import BooksGrid from '@/components/book/BooksGrid.vue'
 import SectionHeader from '@/components/common/SectionHeader.vue'
 import FireRating from '@/components/common/FireRating.vue'
-import { formatLabel } from '@/utils/format-utils'
 import { useHasPopularity } from '@/composables/useHasPopularity'
 import { TYPOGRAPHY, THEME_COLORS, LAYOUT } from '@/constants/theme'
 import BookCoverImage from '@/components/common/BookCoverImage.vue'
@@ -77,10 +76,6 @@ function goToAuthor(id: string) {
               />
             </div>
 
-            <div v-if="mostPopular.availableFormats?.length" class="featured-book__formats">
-              {{ mostPopular.availableFormats.map(formatLabel).join(' · ') }}
-            </div>
-
             <button class="featured-book__title-button" @click="goToBook(mostPopular.id)">
               <h3 class="featured-book__title">
                 {{ mostPopular.title }}
@@ -118,13 +113,17 @@ function goToAuthor(id: string) {
   display: flex;
 }
 
+/* Fixed flex bases: with `auto`, the split depends on content size, which
+   changes as lazy-loaded covers arrive */
 .books-grid {
-  flex: 1 1 auto;
+  flex: 1 1 0;
+  min-width: 0;
 }
 
 .selected-books-section__featured {
   margin-top: v-bind(LAYOUT.BOOK_CARD_MARGIN);
-  flex: 2 2 auto;
+  margin-left: v-bind(LAYOUT.BOOK_CARD_MARGIN);
+  flex: 0 0 30%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -154,7 +153,7 @@ function goToAuthor(id: string) {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 0.75rem;
+  margin-bottom: 1.05rem;
   width: 100%;
   aspect-ratio: 2 / 3;
   max-height: 450px;
