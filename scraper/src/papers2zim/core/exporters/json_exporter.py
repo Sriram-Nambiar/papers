@@ -6,6 +6,7 @@ UI routes live in `search_items_exporter`.
 """
 
 from collections import defaultdict
+from datetime import date
 
 from papers2zim.constants import logger
 from papers2zim.core.index_builder import Indexes
@@ -27,11 +28,13 @@ from papers2zim.core.schemas import (
     FeatureFlags,
     SourceInfo,
     ThemeConfig,
+    ZimContentInfo,
 )
 from papers2zim.core.schemas import (
     Book as BookSchema,
 )
 from papers2zim.core.utils import (
+    ALL_FORMATS,
     archive_name_for,
     article_name_for,
     collection_key,
@@ -178,6 +181,9 @@ def generate_json_files(
     collection_label: str = "Collections",
     collection_icon_style: str = "classification",
     has_popularity: bool = True,
+    requested_languages: list[str] | None = None,
+    requested_collections: list[str] | None = None,
+    books: list[str] | None = None,
 ) -> None:
     """Generate all JSON files for Vue.js frontend"""
     logger.info("Generating JSON files for Vue.js UI")
@@ -244,6 +250,19 @@ def generate_json_files(
     )
 
     logger.debug("Generating config.json")
+    work_titles_by_id = {work.id: work.title for work in all_works}
+    content_info = ZimContentInfo(
+        source=display_name,
+        collections=requested_collections or None,
+        books=(
+            [work_titles_by_id.get(book_id, book_id) for book_id in books]
+            if books
+            else None
+        ),
+        languages=requested_languages or None,
+        formats=None if set(formats) == set(ALL_FORMATS) else formats,
+        date_scraped=date.today().isoformat(),
+    )
     config = Config(
         title=title or zim_name or f"{display_name} Library",
         description=description,
@@ -252,6 +271,7 @@ def generate_json_files(
             name=display_name,
             description=source_description or display_name,
         ),
+        content_info=content_info,
         theme=ThemeConfig(
             format_icons={format_name: format_name for format_name in formats},
             route_labels={

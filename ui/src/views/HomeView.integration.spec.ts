@@ -62,6 +62,14 @@ function setHasMultipleCollections(store: ReturnType<typeof useMainStore>, value
       pdfReader: true,
       noscriptFallback: true,
       hasMultipleCollections: value
+    },
+    contentInfo: {
+      source: 'Test',
+      collections: null,
+      books: null,
+      languages: null,
+      formats: null,
+      dateScraped: '2026-01-01'
     }
   }
 }

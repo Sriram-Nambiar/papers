@@ -121,6 +121,21 @@ class SourceInfo(CamelModel):
     description: str
 
 
+class ZimContentInfo(CamelModel):
+    """Explicit filters used to build this ZIM, for the "About this ZIM" panel.
+
+    A `None` field means that dimension was not filtered at all (displayed
+    as "All" in the UI); a list reports the raw filter values as supplied.
+    """
+
+    source: str
+    collections: list[str] | None = None
+    books: list[str] | None = None
+    languages: list[str] | None = None
+    formats: list[str] | None = None
+    date_scraped: str
+
+
 class ThemeConfig(CamelModel):
     """Source-specific UI presentation settings."""
 
@@ -147,6 +162,7 @@ class Config(CamelModel):
     source: SourceInfo
     theme: ThemeConfig
     features: FeatureFlags
+    content_info: ZimContentInfo
 
 
 # Update forward references for Pydantic v2

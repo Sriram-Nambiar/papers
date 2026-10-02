@@ -55,6 +55,33 @@ def test_otl_ids_are_stored_for_opentextbooks():
     config = build_scrape_config({"--source": "opentextbooks", "--otl-ids": "42,108"})
 
     assert config.source_options["book_ids"] == ["42", "108"]
+    assert config.books is not None
+    assert sorted(config.books) == ["108", "42"]
+    assert config.is_selection is True
+
+
+def test_otl_subjects_are_folded_into_generic_collections():
+    config = build_scrape_config(
+        {"--source": "opentextbooks", "--subjects": "Mathematics,Business"}
+    )
+
+    assert config.collections == ["Mathematics", "Business"]
+    assert config.is_selection is True
+
+
+def test_gutenberg_lcc_shelves_are_stored_as_generic_collections():
+    config = build_scrape_config({"--source": "gutenberg", "--lcc-shelves": "P,PR"})
+
+    assert config.collections == ["P", "PR"]
+    assert config.is_selection is True
+
+
+def test_no_filters_means_no_selection_and_no_collections():
+    config = build_scrape_config({"--source": "wikisource"})
+
+    assert config.collections is None
+    assert config.books is None
+    assert config.is_selection is False
 
 
 def test_otl_ids_and_books_cannot_be_combined():

@@ -121,6 +121,7 @@ def run_scrape(config: ScrapeConfig) -> None:
         # Build ZIM file
         logger.info("BUILDING ZIM")
 
+        requested_languages = config.languages
         work_store = WorkStore()
         build_zimfile(
             books=filtered_books,
@@ -129,6 +130,7 @@ def run_scrape(config: ScrapeConfig) -> None:
             progress=progress,
             engine=engine,
             profile=profile,
+            requested_languages=requested_languages,
         )
 
         # Final increase to indicate we are done
@@ -147,6 +149,7 @@ def build_zimfile(
     progress: ScraperProgress,
     engine: DownloadEngine,
     profile: SourceProfile,
+    requested_languages: list[str] | None = None,
 ) -> None:
     """Build ZIM file from the works collected in the work store"""
     progress.increase_total(len(books))
@@ -281,6 +284,9 @@ def build_zimfile(
             collection_label=profile.collection_label,
             collection_icon_style=profile.collection_icon_style,
             has_popularity=profile.has_popularity,
+            requested_languages=requested_languages,
+            collections=config.collections,
+            books=config.books,
             engine=engine,
             title_search=title_search,
             **profile.pipeline_options(

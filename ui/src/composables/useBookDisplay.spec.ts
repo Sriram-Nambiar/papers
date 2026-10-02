@@ -63,6 +63,14 @@ describe('useBookDisplay', () => {
         pdfReader: true,
         noscriptFallback: true,
         hasPopularity: popularity
+      },
+      contentInfo: {
+        source: 'Test',
+        collections: null,
+        books: null,
+        languages: null,
+        formats: null,
+        dateScraped: '2026-01-01'
       }
     }
   }

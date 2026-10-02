@@ -1,6 +1,7 @@
 """Tests for core.exporters.json_exporter with a mocked assembler (no ZIM)."""
 
 import json
+import re
 from unittest.mock import MagicMock
 
 from papers2zim.core.exporters.json_exporter import generate_json_files
@@ -210,6 +211,51 @@ def test_config_reports_a_source_without_popularity():
     )
 
     assert _config_content(assembler)["features"]["hasPopularity"] is False
+
+
+def test_content_info_reports_all_when_nothing_was_filtered():
+    assembler = MagicMock(name="assembler")
+    store = _store()
+
+    generate_json_files(
+        zim_name="test",
+        formats=["epub", "pdf", "html"],
+        work_store=store,
+        assembler=assembler,
+        display_name="Test Source",
+        indexes=_indexes(store),
+    )
+
+    content_info = _config_content(assembler)["contentInfo"]
+    assert content_info["source"] == "Test Source"
+    assert content_info["collections"] is None
+    assert content_info["books"] is None
+    assert content_info["languages"] is None
+    assert content_info["formats"] is None
+    assert re.fullmatch(r"\d{4}-\d{2}-\d{2}", content_info["dateScraped"])
+
+
+def test_content_info_reports_explicit_filters():
+    assembler = MagicMock(name="assembler")
+    store = _store()
+
+    generate_json_files(
+        zim_name="test",
+        formats=["epub", "pdf"],
+        work_store=store,
+        assembler=assembler,
+        display_name="Test Source",
+        indexes=_indexes(store),
+        requested_languages=["en"],
+        requested_collections=["PR"],
+        books=["1", "3"],
+    )
+
+    content_info = _config_content(assembler)["contentInfo"]
+    assert content_info["collections"] == ["PR"]
+    assert sorted(content_info["books"]) == ["Bleak House", "Oliver Twist"]
+    assert content_info["languages"] == ["en"]
+    assert content_info["formats"] == ["epub", "pdf"]
 
 
 def test_config_reports_a_single_collection_source():

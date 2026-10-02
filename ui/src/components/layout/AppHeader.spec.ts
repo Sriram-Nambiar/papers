@@ -34,6 +34,14 @@ describe('AppHeader', () => {
         pdfReader: true,
         noscriptFallback: true,
         hasMultipleCollections
+      },
+      contentInfo: {
+        source: 'Test',
+        collections: null,
+        books: null,
+        languages: null,
+        formats: null,
+        dateScraped: '2026-01-01'
       }
     }
   }
