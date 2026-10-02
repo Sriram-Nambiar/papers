@@ -9,11 +9,13 @@ import SelectedAuthorsCarousel from '@/components/home/SelectedAuthorsCarousel.v
 import SelectedBooksSection from '@/components/home/SelectedBooksSection.vue'
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue'
 import { useHasPopularity } from '@/composables/useHasPopularity'
+import { useHasMultipleCollections } from '@/composables/useHasMultipleCollections'
 import { LAYOUT } from '@/constants/theme'
 
 const { t } = useI18n()
 const main = useMainStore()
 const hasPopularity = useHasPopularity()
+const hasMultipleCollections = useHasMultipleCollections()
 
 const collections = ref<CollectionPreview[]>([])
 const collectionsLoading = ref(false)
@@ -114,7 +116,9 @@ watch(activeCollectionId, (newCode) => {
 })
 
 onMounted(() => {
-  loadCollections()
+  if (hasMultipleCollections.value) {
+    loadCollections()
+  }
   loadAuthors()
   loadBooks()
 })
@@ -130,7 +134,7 @@ onMounted(() => {
       </v-row>
     </v-container>
 
-    <template v-if="!collectionsLoading && popularCollections.length > 0">
+    <template v-if="hasMultipleCollections && !collectionsLoading && popularCollections.length > 0">
       <popular-collections-bar
         :collections="popularCollections"
         :active-id="activeCollectionId"
@@ -146,12 +150,20 @@ onMounted(() => {
       </div>
     </template>
 
-    <selected-authors-carousel
-      v-if="!authorsLoading && popularAuthors.length > 0"
-      :authors="popularAuthors"
-    />
-
-    <selected-books-section v-if="!booksLoading && books.length > 0" :books="books" />
+    <template v-if="hasMultipleCollections">
+      <selected-authors-carousel
+        v-if="!authorsLoading && popularAuthors.length > 0"
+        :authors="popularAuthors"
+      />
+      <selected-books-section v-if="!booksLoading && books.length > 0" :books="books" />
+    </template>
+    <template v-else>
+      <selected-books-section v-if="!booksLoading && books.length > 0" :books="books" />
+      <selected-authors-carousel
+        v-if="!authorsLoading && popularAuthors.length > 0"
+        :authors="popularAuthors"
+      />
+    </template>
   </div>
 </template>
 
