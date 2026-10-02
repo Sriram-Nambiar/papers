@@ -46,7 +46,7 @@ const activeCollectionName = computed(() => {
 })
 
 const sortedCollections = computed(() =>
-  [...props.collections].sort((a, b) => a.name.localeCompare(b.name))
+  [...props.collections].sort((a, b) => displayCollectionName(a).localeCompare(displayCollectionName(b)))
 )
 </script>
 
