@@ -9,15 +9,15 @@ interface Props {
   author: AuthorPreview
   variant?: 'compact' | 'comfortable' | 'full'
   navigate?: boolean
-  bordered?: boolean
-  noRightBorder?: boolean
+  boxed?: boolean
+  selected?: boolean
 }
 
 withDefaults(defineProps<Props>(), {
   variant: 'compact',
   navigate: true,
-  bordered: false,
-  noRightBorder: false
+  boxed: false,
+  selected: false
 })
 
 const { t } = useI18n()
@@ -40,9 +40,9 @@ const { t } = useI18n()
         'author-card--compact': variant === 'compact',
         'author-card--comfortable': variant === 'comfortable',
         'author-card--full': variant === 'full',
-        'author-card--bordered': bordered,
-        'author-card__navigate': navigate,
-        'author-card__no-right-border': noRightBorder
+        'author-card--boxed': boxed,
+        'author-card--selected': selected,
+        'author-card__navigate': navigate
       }
     ]"
   >
@@ -75,19 +75,33 @@ const { t } = useI18n()
   width: 100%;
   height: 12rem;
   color: rgb(var(--v-theme-text));
-  position: relative;
-  z-index: 0;
-  transition: box-shadow 0.2s ease;
 }
 
-.author-card--bordered {
-  border-top: v-bind(LAYOUT.CARD_BORDER) solid rgb(var(--v-theme-grid));
-  border-right: v-bind(LAYOUT.CARD_BORDER) solid rgb(var(--v-theme-grid));
-  border-bottom: v-bind(LAYOUT.CARD_BORDER) solid rgb(var(--v-theme-grid));
+.author-card--boxed {
+  /* Fill the parent cell (minus margin); cells are flex rows */
+  width: auto;
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: v-bind(LAYOUT.BOOK_CARD_MARGIN);
+  /* Transparent border keeps the card size constant when it shows on hover */
+  border: v-bind(LAYOUT.BOOK_CARD_HOVER_BORDER) solid transparent;
+  border-radius: v-bind(LAYOUT.BOOK_CARD_RADIUS);
+  background-color: rgb(var(--v-theme-cardBgd));
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
 }
 
-.author-card__no-right-border {
-  border-right: 0px;
+.author-card--boxed.author-card--selected {
+  background-color: rgb(var(--v-theme-cardBgdHover));
+  border-color: rgb(var(--v-theme-cardBorderHover));
+}
+
+.author-card--boxed.author-card__navigate:hover,
+.author-card--boxed.author-card__navigate:focus-visible {
+  background-color: rgb(var(--v-theme-cardBgdHover));
+  border-color: rgb(var(--v-theme-cardBorderHover));
+  box-shadow: 0 0 10px 0 rgb(var(--v-theme-grid));
 }
 
 .author-card--compact {

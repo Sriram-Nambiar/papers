@@ -61,6 +61,7 @@ const { t } = useI18n()
 .list-book-card:focus-visible {
   background-color: rgb(var(--v-theme-cardBgdHover));
   border-color: rgb(var(--v-theme-cardBorderHover));
+  box-shadow: 0 0 10px 0 rgb(var(--v-theme-grid));
 }
 
 .cover-wrapper {

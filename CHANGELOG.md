@@ -19,7 +19,7 @@ as of 2.0.0.
 
 ### Changed
 
-- UI: replace book grid borders with rounded card backgrounds, highlighted on hover, in grid, carousel and list views
+- UI: replace book grid borders with rounded card backgrounds, highlighted on hover, in book grid, book list, book carousel and author carousel
 
 ### Fixed
 

@@ -39,7 +39,6 @@ export const LAYOUT = {
   VIEW_PADDING_HORIZONTAL: '1.6rem',
   VIEW_PADDING: '2rem 1.6rem',
   VIEW_PADDING_MOBILE: '1.5rem 1.6rem',
-  CARD_BORDER: '1.5px',
   BOOK_CARD_RADIUS: '10px',
   BOOK_CARD_MARGIN: '0.5rem',
   BOOK_CARD_HOVER_BORDER: '0.5px'
