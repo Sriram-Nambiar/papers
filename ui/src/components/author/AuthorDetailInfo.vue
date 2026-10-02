@@ -17,7 +17,7 @@ const books = toRef(() => props.author.books as BookPreview[])
   <div>
     <author-detail-carousel :authors="authors" :current-author="author" />
 
-    <section v-if="author.bio || author.webpageResource" class="author-about">
+    <section v-if="author.bio" class="author-about">
       <div class="author-about__content">
         <h3 class="author-about__title">{{ $t('author.about') }}</h3>
         <p v-if="author.bio" class="author-about__bio">{{ author.bio }}</p>
