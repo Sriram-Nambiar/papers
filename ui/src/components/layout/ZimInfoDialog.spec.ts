@@ -117,4 +117,22 @@ describe('ZimInfoDialog', () => {
     const bullets = Array.from(document.body.querySelectorAll('.zim-info-dialog__bullets li'))
     expect(bullets.map((li) => li.textContent)).toEqual(['Bleak House', 'Emma'])
   })
+
+  it('pluralizes labels on the number of values, plural when all are included', () => {
+    setContentInfo({
+      source: 'Project Gutenberg',
+      collections: ['P'],
+      books: ['Bleak House', 'Emma'],
+      languages: null,
+      formats: ['epub'],
+      dateScraped: '2026-09-23'
+    })
+
+    mountOpen()
+
+    const labels = Array.from(document.body.querySelectorAll('.zim-info-dialog__row dt')).map(
+      (dt) => dt.textContent?.trim()
+    )
+    expect(labels).toEqual(['Source', 'Collection', 'Books', 'Languages', 'Format', 'Date scraped'])
+  })
 })

@@ -1,6 +1,12 @@
-"""Tests for the ignore-key derivation in validate_i18n."""
+"""Tests for validate_i18n."""
 
-from papers2zim.scripts.validate_i18n import get_ignored_keys
+from papers2zim.scripts.validate_i18n import (
+    extract_placeholders,
+    get_ignored_keys,
+    get_leaf_keys,
+    get_leaf_values,
+    validate_plural_messages,
+)
 
 
 def _en_data(**overrides):
@@ -81,3 +87,42 @@ def test_does_not_match_partial_paragraph_names():
     )
     ignored = get_ignored_keys(data)
     assert not any(key.startswith("about.") for key in ignored)
+
+
+def test_plural_message_is_a_single_leaf_key():
+    data = {"zimInfo": {"books": {"one": "Book", "other": "Books"}, "title": "T"}}
+    assert get_leaf_keys(data) == {"zimInfo.books", "zimInfo.title"}
+
+
+def test_plural_message_value_joins_forms_for_placeholder_checks():
+    data = {"books": {"one": "One book", "other": "{count} books"}}
+    values = get_leaf_values(data)
+    assert set(values) == {"books"}
+    assert extract_placeholders(values["books"]) == {"count"}
+
+
+def test_valid_plural_messages_have_no_issue():
+    data = {
+        "a": {"books": {"one": "Book", "other": "Books"}},
+        "b": {"zero": "None", "two": "Two", "few": "F", "many": "M", "other": "O"},
+    }
+    assert validate_plural_messages(data) == []
+
+
+def test_plural_message_without_other_form_is_reported():
+    issues = validate_plural_messages({"a": {"books": {"one": "Book"}}})
+    assert len(issues) == 1
+    assert "a.books" in issues[0]
+    assert "'other'" in issues[0]
+
+
+def test_plural_message_with_invalid_category_is_reported():
+    issues = validate_plural_messages({"books": {"one": "Book", "plural": "Books"}})
+    assert len(issues) == 1
+    assert "['plural']" in issues[0]
+
+
+def test_namespace_without_plural_categories_is_not_a_plural_message():
+    data = {"common": {"title": "T", "nested": {"label": "L"}}}
+    assert validate_plural_messages(data) == []
+    assert get_leaf_keys(data) == {"common.title", "common.nested.label"}

@@ -9,6 +9,10 @@ from typing import Any
 
 # ruff: noqa: T201
 
+# Plural messages are objects keyed by CLDR plural category (see
+# ui/src/plugins/i18n.ts), e.g. {"one": "Book", "other": "Books"}
+PLURAL_CATEGORIES = {"zero", "one", "two", "few", "many", "other"}
+
 
 def load_json(path: Path) -> dict[str, Any]:
     """Load and parse a JSON file."""
@@ -23,9 +27,20 @@ def load_json(path: Path) -> dict[str, Any]:
         raise
 
 
+def is_plural_message(value: Any) -> bool:
+    """Check if a value is a plural message, i.e. a non-empty object whose keys
+    are all plural categories and whose values are all strings."""
+    return (
+        isinstance(value, dict)
+        and len(value) > 0
+        and set(value.keys()) <= PLURAL_CATEGORIES
+        and all(isinstance(form, str) for form in value.values())
+    )
+
+
 def get_leaf_keys(data: dict[str, Any], prefix: str = "") -> set[str]:
     """Recursively extract all leaf keys (keys with string values) from nested
-    dictionary."""
+    dictionary. A plural message is a single leaf."""
     result: set[str] = set()
 
     for key, value in data.items():
@@ -33,7 +48,7 @@ def get_leaf_keys(data: dict[str, Any], prefix: str = "") -> set[str]:
             continue
         full_key = f"{prefix}.{key}" if prefix else key
 
-        if isinstance(value, dict):
+        if isinstance(value, dict) and not is_plural_message(value):
             child_result = get_leaf_keys(value, full_key)
             result.update(child_result)
         else:
@@ -43,7 +58,8 @@ def get_leaf_keys(data: dict[str, Any], prefix: str = "") -> set[str]:
 
 
 def get_leaf_values(data: dict[str, Any], prefix: str = "") -> dict[str, str]:
-    """Recursively extract all leaf key-value pairs from nested dictionary."""
+    """Recursively extract all leaf key-value pairs from nested dictionary. The
+    forms of a plural message are joined, one per line."""
     result: dict[str, str] = {}
 
     for key, value in data.items():
@@ -51,13 +67,43 @@ def get_leaf_values(data: dict[str, Any], prefix: str = "") -> dict[str, str]:
             continue
         full_key = f"{prefix}.{key}" if prefix else key
 
-        if isinstance(value, dict):
+        if is_plural_message(value):
+            result[full_key] = "\n".join(value.values())
+        elif isinstance(value, dict):
             child_result = get_leaf_values(value, full_key)
             result.update(child_result)
         else:
             result[full_key] = str(value)
 
     return result
+
+
+def validate_plural_messages(data: dict[str, Any], prefix: str = "") -> list[str]:
+    """Check the structure of plural messages: an object using plural categories
+    must only use plural categories with string values, and define "other"."""
+    issues: list[str] = []
+
+    for key, value in data.items():
+        if key == "@metadata" or not isinstance(value, dict):
+            continue
+        full_key = f"{prefix}.{key}" if prefix else key
+
+        plural_keys = set(value.keys()) & PLURAL_CATEGORIES
+        if is_plural_message(value):
+            if "other" not in value:
+                issues.append(f"   - {full_key}: plural message without 'other' form")
+        elif plural_keys and all(
+            isinstance(value[plural_key], str) for plural_key in plural_keys
+        ):
+            invalid = sorted(set(value.keys()) - PLURAL_CATEGORIES)
+            issues.append(
+                f"   - {full_key}: plural message with invalid categories {invalid}, "
+                f"allowed ones are {sorted(PLURAL_CATEGORIES)}"
+            )
+        else:
+            issues.extend(validate_plural_messages(value, full_key))
+
+    return issues
 
 
 def merge_locale_data(
@@ -135,7 +181,7 @@ def extract_keys_from_file(file_path: Path, file_type: str) -> set[str]:
     content = file_path.read_text(encoding="utf-8")
 
     patterns = {
-        "vue": r'\bt\s*\(\s*["\']([^"\']+)["\']',
+        "vue": r'\btp?\s*\(\s*["\']([^"\']+)["\']',
         "python": r'i18n\.t\s*\(\s*["\']([^"\']+)["\']',
         "html": r'data-l10n-id\s*=\s*["\']([^"\']+)["\']',
     }
@@ -352,6 +398,14 @@ def main() -> int:
                 errors.append(f"   - Extra documentation: {namespace}.{key}")
         else:
             print(f"   ✅ {namespace} en.json and qqq.json keys match perfectly")
+
+    for locale_file in sorted(locales_dir.glob("*.json")):
+        if locale_file.name == "qqq.json":
+            continue
+        plural_issues = validate_plural_messages(load_json(locale_file))
+        if plural_issues:
+            errors.append(f"❌ {locale_file.name} has invalid plural messages:")
+            errors.extend(plural_issues)
 
     quality_issues: dict[str, list[str]] = {}
 

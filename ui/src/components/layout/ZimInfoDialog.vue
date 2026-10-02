@@ -7,6 +7,7 @@ import { useFormatters } from '@/composables/useFormatters'
 import { getCollectionLabel } from '@/utils/collection-names'
 import { formatScrapeDate } from '@/utils/format-utils'
 import { TYPOGRAPHY } from '@/constants/theme'
+import { usePlural } from '@/plugins/i18n'
 
 const ZIM_INFO_TEXT_LIGHT = '#38495c'
 const ZIM_INFO_BGD_DARK = '#38495c'
@@ -23,6 +24,7 @@ const emit = defineEmits<{
 }>()
 
 const { t, locale } = useI18n()
+const { tp } = usePlural()
 const main = useMainStore()
 const theme = useTheme()
 const { mobile } = useDisplay()
@@ -62,28 +64,28 @@ interface InfoRow {
   mode: 'list' | 'csv'
 }
 
-const rows = computed<InfoRow[]>(() => [
-  {
-    label: t('zimInfo.collections'),
-    values: contentInfo.value?.collections?.map((value) => getCollectionLabel(value, t)) ?? null,
-    mode: 'list'
-  },
-  {
-    label: t('zimInfo.books'),
-    values: contentInfo.value?.books ?? null,
-    mode: 'list'
-  },
-  {
-    label: t('zimInfo.language'),
-    values: contentInfo.value?.languages?.map((code) => formatLanguages([code])) ?? null,
-    mode: 'list'
-  },
-  {
-    label: t('zimInfo.formats'),
-    values: contentInfo.value?.formats?.map((format) => formatLabel(format)) ?? null,
-    mode: 'csv'
-  }
-])
+// Labels are pluralized on the number of values; no values means "all"
+function valuesCount(values: string[] | null) {
+  return values?.length || null
+}
+
+const rows = computed<InfoRow[]>(() => {
+  const collections =
+    contentInfo.value?.collections?.map((value) => getCollectionLabel(value, t)) ?? null
+  const books = contentInfo.value?.books ?? null
+  const languages = contentInfo.value?.languages?.map((code) => formatLanguages([code])) ?? null
+  const formats = contentInfo.value?.formats?.map((format) => formatLabel(format)) ?? null
+  return [
+    {
+      label: tp('zimInfo.collections', valuesCount(collections)),
+      values: collections,
+      mode: 'list'
+    },
+    { label: tp('zimInfo.books', valuesCount(books)), values: books, mode: 'list' },
+    { label: tp('zimInfo.language', valuesCount(languages)), values: languages, mode: 'list' },
+    { label: tp('zimInfo.formats', valuesCount(formats)), values: formats, mode: 'csv' }
+  ]
+})
 
 const dateScrapedValue = computed(() => {
   const isoDate = contentInfo.value?.dateScraped
@@ -206,7 +208,6 @@ const dateScrapedValue = computed(() => {
 }
 
 @media (max-width: 767px) {
-
   .zim-info-dialog__card {
     padding: 1rem;
   }

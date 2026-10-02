@@ -82,10 +82,10 @@ const i18n = createI18n({
         trigger: 'Information about this ZIM',
         title: 'Information about this ZIM',
         source: 'Source',
-        collections: 'Collections',
-        books: 'Books',
-        language: 'Language',
-        formats: 'Formats',
+        collections: { one: 'Collection', other: 'Collections' },
+        books: { one: 'Book', other: 'Books' },
+        language: { one: 'Language', other: 'Languages' },
+        formats: { one: 'Format', other: 'Formats' },
         dateScraped: 'Date scraped'
       },
       messages: {
