@@ -42,13 +42,7 @@ onMounted(() => {
 <template>
   <div class="books-view">
     <loading-spinner v-if="booksLoading" :message="t('common.loading')" />
-    <book-display
-      v-else-if="books.length > 0"
-      :books="filteredBooks"
-      :columns="5"
-      centered
-      type="books"
-    />
+    <book-display v-else-if="books.length > 0" :books="filteredBooks" :columns="5" type="books" />
     <empty-state v-else :message="t(MESSAGES.NO_BOOKS)" type="info" />
     <back-to-top-button />
   </div>

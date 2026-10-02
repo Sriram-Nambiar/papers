@@ -15,6 +15,11 @@ as of 2.0.0.
 - Wikisource: add the library mission to the about page (#18)
 - Use book cover component with fallback images everywhere (#22)
 - Hide the "Collections" navigation item and homepage shelves when the ZIM only has a single collection (#3)
+- Revisit book grid for a better design and less rendering issues (#46)
+
+### Changed
+
+- UI: replace book grid borders with rounded card backgrounds, highlighted on hover, in grid, carousel and list views
 
 ### Fixed
 

@@ -11,7 +11,6 @@ const props = defineProps<{
   books: BookPreview[]
   columns: number
   variant?: BookGridVariant
-  centered?: boolean
   type?: 'books' | 'authors' | 'shelves'
 }>()
 
@@ -47,13 +46,7 @@ function onDisplayedCount(count: number) {
       :type="type || 'books'"
       class="mb-4"
     />
-    <books-grid
-      v-if="isGridView"
-      :books="displayedBooks"
-      :columns="columns"
-      :centered="centered"
-      :variant="variant"
-    />
+    <books-grid v-if="isGridView" :books="displayedBooks" :columns="columns" :variant="variant" />
     <books-list v-else :books="displayedBooks" @update:displayed-count="onDisplayedCount" />
 
     <div v-if="infiniteHasMore" ref="sentinelRef" class="text-caption text-center py-4">

@@ -39,7 +39,10 @@ async function loadVuetify() {
     bgd3Fill: THEME_COLORS.BGD_3_FILL,
     bgd3Outline: THEME_COLORS.BGD_3_OUTLINE,
     text: THEME_COLORS.TEXT,
-    grid: THEME_COLORS.GRID
+    grid: THEME_COLORS.GRID,
+    cardBgd: THEME_COLORS.CARD_BGD,
+    cardBgdHover: THEME_COLORS.CARD_BGD_HOVER,
+    cardBorderHover: THEME_COLORS.CARD_BORDER_HOVER
   }
 
   const lightColors = {
@@ -60,7 +63,10 @@ async function loadVuetify() {
     bgd3Outline: THEME_COLORS.BGD_3_OUTLINE_DARK,
     focusBook: THEME_COLORS.FOCUS_BOOK_DARK,
     collectionIcon: THEME_COLORS.COLLECTION_ICON_DARK,
-    authorAvatarBgd: THEME_COLORS.AUTHOR_AVATAR_BGD_DARK
+    authorAvatarBgd: THEME_COLORS.AUTHOR_AVATAR_BGD_DARK,
+    cardBgd: THEME_COLORS.CARD_BGD_DARK,
+    cardBgdHover: THEME_COLORS.CARD_BGD_HOVER_DARK,
+    cardBorderHover: THEME_COLORS.CARD_BORDER_HOVER_DARK
   }
 
   const lightTheme: ThemeDefinition = {

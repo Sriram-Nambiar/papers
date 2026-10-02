@@ -3,7 +3,7 @@ import type { BookPreview } from '@/types'
 import { useI18n } from 'vue-i18n'
 import BookCoverImage from '@/components/common/BookCoverImage.vue'
 import FireRating from '@/components/common/FireRating.vue'
-import { TYPOGRAPHY } from '@/constants/theme'
+import { LAYOUT, TYPOGRAPHY } from '@/constants/theme'
 
 defineProps<{
   book: BookPreview
@@ -45,21 +45,22 @@ const { t } = useI18n()
 .list-book-card {
   display: flex;
   gap: 1rem;
-  width: 100%;
-  height: 100%;
-  position: relative;
-  z-index: 0;
   color: inherit;
-  border: 1px solid rgb(var(--v-theme-grid));
+  margin: v-bind(LAYOUT.BOOK_CARD_MARGIN);
+  /* Transparent border keeps the card size constant when it shows on hover */
+  border: v-bind(LAYOUT.BOOK_CARD_HOVER_BORDER) solid transparent;
+  border-radius: v-bind(LAYOUT.BOOK_CARD_RADIUS);
+  background-color: rgb(var(--v-theme-cardBgd));
   padding: 1.5rem;
-  transition: box-shadow 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .list-book-card:hover,
-.list-book-card:focus {
-  border-color: rgb(var(--v-theme-grid));
-  box-shadow: 0 0 10px 0 rgb(var(--v-theme-grid));
-  z-index: 1;
+.list-book-card:focus-visible {
+  background-color: rgb(var(--v-theme-cardBgdHover));
+  border-color: rgb(var(--v-theme-cardBorderHover));
 }
 
 .cover-wrapper {

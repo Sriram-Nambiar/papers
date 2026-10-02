@@ -23,7 +23,13 @@ export const THEME_COLORS = {
   TEXT: '#000000',
   TEXT_DARK: '#ffffff',
   GRID: '#cccccc',
-  GRID_DARK: '#444444'
+  GRID_DARK: '#444444',
+  CARD_BGD: '#ffffff',
+  CARD_BGD_DARK: '#1e1e1e',
+  CARD_BGD_HOVER: '#e8eced',
+  CARD_BGD_HOVER_DARK: '#2a3034',
+  CARD_BORDER_HOVER: '#9eacb5',
+  CARD_BORDER_HOVER_DARK: '#5a6870'
 } as const
 
 export const LAYOUT = {
@@ -33,7 +39,10 @@ export const LAYOUT = {
   VIEW_PADDING_HORIZONTAL: '1.6rem',
   VIEW_PADDING: '2rem 1.6rem',
   VIEW_PADDING_MOBILE: '1.5rem 1.6rem',
-  CARD_BORDER: '1.5px'
+  CARD_BORDER: '1.5px',
+  BOOK_CARD_RADIUS: '10px',
+  BOOK_CARD_MARGIN: '0.5rem',
+  BOOK_CARD_HOVER_BORDER: '0.5px'
 } as const
 
 export const AVATAR_SIZES = {

@@ -34,7 +34,7 @@ const books = toRef(() => props.author.books as BookPreview[])
     </section>
 
     <div v-if="books.length > 0" class="author-books">
-      <book-display :books="books" :columns="5" type="books" centered />
+      <book-display :books="books" :columns="5" type="books" />
     </div>
 
     <empty-state v-else :message="$t('messages.noBooksForAuthor')" />

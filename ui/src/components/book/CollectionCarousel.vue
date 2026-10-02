@@ -5,7 +5,7 @@ import type { BookPreview } from '@/types'
 import CollectionBookCard from './CollectionBookCard.vue'
 import CarouselArrow from '@/components/common/CarouselArrow.vue'
 import { useI18n } from 'vue-i18n'
-import { TYPOGRAPHY, LAYOUT } from '@/constants/theme'
+import { TYPOGRAPHY } from '@/constants/theme'
 import { useDisplay } from 'vuetify'
 
 const props = defineProps<{
@@ -122,13 +122,6 @@ watch(
 
 .collection-books-row {
   display: flex;
-  /* Each card only draws its own right/bottom border (see
-     CollectionBookCard.vue), so no two cards ever paint the same seam. The
-     row supplies the top/left edge once, for whichever card ends up first —
-     flex packs from the left by default, so the row's own edge lines up
-     exactly with that card's edge with no extra math needed. */
-  border-top: v-bind(LAYOUT.CARD_BORDER) solid rgb(var(--v-theme-grid));
-  border-left: v-bind(LAYOUT.CARD_BORDER) solid rgb(var(--v-theme-grid));
 }
 
 .collection-books-scroll.g-mobile-only {
@@ -136,9 +129,6 @@ watch(
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
-  /* This is the scrollable viewport, sized to the available width — the
-     .collection-books-row inside it (which carries the border) is left to
-     size itself to fit-content, so it doesn't stretch the border with it. */
   width: 100%;
   padding: 5px 50px;
 }

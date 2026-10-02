@@ -60,7 +60,7 @@ function goToAuthor(id: string) {
 
       <div class="selected-books-section__grid">
         <div class="books-grid">
-          <books-grid :books="topBooks" :columns="mostPopular ? 4 : 8" variant="compact" centered />
+          <books-grid :books="topBooks" :columns="mostPopular ? 4 : 8" variant="compact" />
         </div>
 
         <div v-if="mostPopular" class="selected-books-section__featured">
@@ -119,12 +119,12 @@ function goToAuthor(id: string) {
 }
 
 .books-grid {
-  flex-grow: 1;
-  flex-shrink: 1;
+  flex: 1 1 auto;
 }
 
 .selected-books-section__featured {
-  width: calc(2 * 160px);
+  margin-top: v-bind(LAYOUT.BOOK_CARD_MARGIN);
+  flex: 2 2 auto;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -132,9 +132,10 @@ function goToAuthor(id: string) {
 }
 
 .selected-books-section__featured-inner {
-  padding: 4rem;
+  padding: 3rem;
   background-color: v-bind(THEME_COLORS.FOCUS_BOOK);
   color: #ffffff;
+  border-radius: 10px;
 }
 
 .featured-book__label {
