@@ -27,9 +27,7 @@ describe('CollectionSidebar', () => {
   it('renders collection name and book count correctly without underline regression (issue #24)', () => {
     const wrapper = mount(CollectionSidebar, {
       props: {
-        collections: [
-          { id: 'history', name: 'History', bookCount: 2 }
-        ],
+        collections: [{ id: 'history', name: 'History', bookCount: 2 }],
         activeId: 'history',
         totalBooks: 10
       },
@@ -48,33 +46,34 @@ describe('CollectionSidebar', () => {
     const allBtn = buttons[0]
     const allCountSpan = allBtn.find('.collection-sidebar__count')
     expect(allCountSpan.exists()).toBe(true)
-    
+
     // The space is handled by CSS margin-left, so the textContent is just the count
     expect(allCountSpan.element.textContent).toBe('(10)')
-    
+
     const allParentSpan = allBtn.findAll('span')[0]
     const allChildNodes = Array.from(allParentSpan.element.childNodes)
-    const allCountIndex = allChildNodes.findIndex(node => node === allCountSpan.element)
-    
+    const allCountIndex = allChildNodes.findIndex((node) => node === allCountSpan.element)
+
     const allPrevNode = allChildNodes[allCountIndex - 1]
     expect(allPrevNode.nodeType).toBe(Node.TEXT_NODE)
     // Must NOT have a trailing space (which would be underlined by the active button)
     expect(allPrevNode.textContent).toBe('collection.allCollections')
-
 
     // 2. Check individual collection button
     const historyBtn = buttons[1]
     // The text span is inside the button (icon is first, then the span)
     const historyCountSpan = historyBtn.find('.collection-sidebar__count')
     expect(historyCountSpan.exists()).toBe(true)
-    
+
     // The space is handled by CSS margin-left, so the textContent is just the count
     expect(historyCountSpan.element.textContent).toBe('(2)')
-    
+
     const historyParentSpan = historyBtn.findAll('span')[0]
     const historyChildNodes = Array.from(historyParentSpan.element.childNodes)
-    const historyCountIndex = historyChildNodes.findIndex(node => node === historyCountSpan.element)
-    
+    const historyCountIndex = historyChildNodes.findIndex(
+      (node) => node === historyCountSpan.element
+    )
+
     const historyPrevNode = historyChildNodes[historyCountIndex - 1]
     expect(historyPrevNode.nodeType).toBe(Node.TEXT_NODE)
     // Must NOT have a trailing space
