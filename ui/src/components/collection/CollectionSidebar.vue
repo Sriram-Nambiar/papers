@@ -83,8 +83,7 @@ const sortedCollections = computed(() =>
               <path :d="mdiBookshelf" />
             </svg>
             <span>
-              {{ t('collection.allCollections') }}
-              <span class="collection-sidebar__count">({{ totalBooks }})</span>
+              {{ t('collection.allCollections') }}<span class="collection-sidebar__count">({{ totalBooks }})</span>
             </span>
           </button>
         </li>
@@ -105,8 +104,7 @@ const sortedCollections = computed(() =>
             />
             <ClassificationIcon v-else :id="collection.id" :fallback="mdiBookshelf" />
             <span>
-              {{ displayCollectionName(collection) }}
-              <span class="collection-sidebar__count">({{ collection.bookCount }})</span>
+              {{ displayCollectionName(collection) }}<span class="collection-sidebar__count">({{ collection.bookCount }})</span>
             </span>
           </button>
         </li>
@@ -186,6 +184,7 @@ const sortedCollections = computed(() =>
 
 .collection-sidebar__count {
   display: inline-block;
+  margin-left: 0.25rem;
   font-size: v-bind(TYPOGRAPHY.SMALL_SIZE);
   color: rgb(var(--v-theme-text));
   opacity: 0.5;
