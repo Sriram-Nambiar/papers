@@ -50,13 +50,9 @@ CLI_OPTIONS = {
         "  --lcc-shelves=<shelves>         Comma-separated LCC shelf codes to "
         "include (e.g., P,PR,Q). Use 'all' for every shelf"
     ),
-    "--with-author-bio": (
-        "  --with-author-bio             Add author biographies from Wikipedia to "
-        "the ZIM"
-    ),
-    "--with-author-portrait": (
-        "  --with-author-portrait        Add author portraits from Wikipedia to the "
-        "ZIM"
+    "--with-author-details": (
+        "  --with-author-details         Add author biographies and portraits "
+        "from Wikipedia to the ZIM"
     ),
 }
 
@@ -79,10 +75,8 @@ def parse_options(arguments: dict[str, Any]) -> dict[str, Any]:
                     f"Unsupported LCC shelf code(s): {', '.join(sorted(invalid))}"
                 )
             options["collections"] = collections
-    if arguments.get("--with-author-bio"):
-        options["with_author_bio"] = True
-    if arguments.get("--with-author-portrait"):
-        options["with_author_portrait"] = True
+    if arguments.get("--with-author-details"):
+        options["with_author_details"] = True
     return options
 
 
